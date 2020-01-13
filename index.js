@@ -371,7 +371,7 @@
       clearTimeout(rep);
     }
     */
-    window.scrollTo(0, Target);
+    //window.scrollTo(0, Target);
   }
 
   function simulate_button(name){
