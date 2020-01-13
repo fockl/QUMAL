@@ -143,6 +143,11 @@
     canvas.parentNode.removeChild(canvas);
   }
 
+  function check_switch(){
+    var checkbox = document.getElementById("controll");
+    checkbox.checked = false;
+  }
+
   function delete_results(){
     var canvas = document.getElementById("result_left_top");
     if(canvas!=null){
@@ -246,6 +251,7 @@
     make_button("nbutton1", 225, 25);
     make_button("nbutton2", 325, 25);
     make_button("simulate", 425, 25);
+    check_switch();
 
     for(var y=0; y<N; y++){
       make_zero(y);
@@ -358,12 +364,14 @@
     var Pos = window.pageYOffset;
     var move = Target/20;
     var interval = 1000/100;
-
+    /*
     window.scrollBy(0, move);
     var rep = setTimeout(scroll, interval);
     if(Pos === Target){
       clearTimeout(rep);
     }
+    */
+    window.scrollTo(0, Target);
   }
 
   function simulate_button(name){
