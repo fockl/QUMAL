@@ -1,0 +1,131 @@
+canvas{
+  width: 100px;
+  height: 100px;
+}
+.operator:hover{
+  background-color: lightgreen;
+  border-color: lightgreen;
+}
+.zero{
+  width: 100px;
+  height: 100px;
+}
+.zero:hover{
+  background-color: lightgreen;
+  border-color: lightgreen;
+}
+.result-bar{
+  border-style: solid;
+  border-color: black;
+  height: 200px;
+}
+.result-index{
+  border-style: solid;
+  border-color: black;
+  height: 50px;
+}
+.result_left_top{
+  border-style: solid;
+  border-color: black;
+  width: 50px;
+  height: 200px;
+}
+
+.controllArea{
+  position: absolute;
+  top: 25px;
+  left: 525px;
+  width: 120px;
+  height: 50px;
+}
+.controllArea input[type="checkbox"]{
+  display: none;
+}
+.controllArea label{
+  display: block;
+  box-sizing: border-box;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  height: 50px;
+  font-size: 18px;
+  line-height: 50px;
+  font-weight: bold;
+  background: #eee;
+  box-shadow: 3px 3px 6px #888;
+  transition: .3s;
+}
+.controllArea label span:after{
+  content: "Controll OFF";
+  color: #aaa;
+}
+.controllArea #controll:checked + label{
+  background: #78bd78;
+  box-shadow: none;
+}
+.controllArea #controll:checked + label span:after{
+  content: "Controll ON";
+  color: #fff;
+}
+
+button{
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border-bottom: solid 4px #627295;
+  border-radius: 3px;
+  width: 75px;
+  height: 50px;
+}
+.nbutton1{
+  position: "absolute";
+  left: 225px;
+  top: 25px;
+}
+.nbutton1:active{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+.nbutton2{
+  position: "absolute";
+  left: 325px;
+  top: 25px;
+}
+.nbutton2:active{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+.wbutton1{
+  position: "absolute";
+  left: 25px;
+  top: 25px;
+}
+.wbutton1:active{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+.wbutton2{
+  position: "absolute";
+  left: 125px;
+  top: 25px;
+}
+.wbutton2:active{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
+.simulate{
+  position: "absolute";
+  left: 425px;
+  top: 25px;
+  background: #00ffff;
+  color: red;
+}
+.simulate:active{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
