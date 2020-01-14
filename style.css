@@ -118,6 +118,13 @@ button{
   transform: translateY(4px);
   border-bottom: none;
 }
+.sort_show{
+}
+.sort_show{
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  border-bottom: none;
+}
 
 a{
   color: #0073bc;

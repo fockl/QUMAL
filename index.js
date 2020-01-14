@@ -1,6 +1,8 @@
 (() => {
   var W = 2;
   var N = 2;
+  var state = [];
+  var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = ["I", "X", "Z", "H"];
   const sqrt2 = Math.sqrt(2);
@@ -62,6 +64,9 @@
       case "simulate":
         text = "Simulate";
         break;
+      case "sort_show":
+        text = "SORT";
+        break;
       default:
         break;
     }
@@ -78,6 +83,9 @@
         break;
       case "simulate":
         button.object = new simulate_button(name);
+        break;
+      case "sort_show":
+        button.object = new sort_show_button(name);
         break;
     }
   }
@@ -166,6 +174,10 @@
         canvas.parentNode.removeChild(canvas);
       }
     }
+    var button = document.getElementById("sort_show");
+    if(button!=null){
+      button.parentNode.removeChild(button);
+    }
   }
 
   function make_result_left_top(){
@@ -178,12 +190,12 @@
     document.body.appendChild(canvas);
   }
 
-  function make_result_bar(index, val, width){
+  function make_result_bar(index, pos, val, width){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result-bar");
     canvas.setAttribute("id", "result-bar-"+index);
     canvas.style.position = "absolute";
-    canvas.style.left = 100+index*width+X_SHIFT+"px";
+    canvas.style.left = 100+pos*width+X_SHIFT+"px";
     canvas.style.top = 100*(N+2)+Y_SHIFT+"px";
     canvas.width = width;
     var height = canvas.height;
@@ -204,12 +216,12 @@
     return str;
   }
 
-  function make_result_index(index, name, width){
+  function make_result_index(index, pos, name, width){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result-index");
     canvas.setAttribute("id", "result-index-"+index);
     canvas.style.position = "absolute";
-    canvas.style.left = 100+index*width+X_SHIFT+"px";
+    canvas.style.left = 100+pos*width+X_SHIFT+"px";
     canvas.style.top = 100*(N+2)+200+Y_SHIFT+"px";
     var ctx = canvas.getContext('2d');
     ctx.font = '64px serif';
@@ -220,20 +232,32 @@
     document.body.appendChild(canvas);
   }
 
-  function make_result(index, val){
+  function make_result(index, pos, val){
     //var width = (N+2)*25; canvasの幅を動的に変更しようとしてできなかった
     var width = 100;
-    make_result_bar(index, val, width);
+    make_result_bar(index, pos, val, width);
     var index_string = index_converter_to_string(index);
-    make_result_index(index, index_string, width);
+    make_result_index(index, pos, index_string, width);
   }
 
-  function show_results(state){
+  function show_results(){
     delete_results();
     make_result_left_top();
+    var state_all = [];
     for(var i=0; i<num_of_state; i++){
-      make_result(i, state[i]);
+      state_all.push([state[i], i]);
     }
+    state_all.sort(function(a, b){return b[0]-a[0]});
+    if(sort_show_flag){
+      for(var i=0; i<num_of_state; i++){
+        make_result(state_all[i][1], i, state_all[i][0]);
+      }
+    }else{
+      for(var i=0; i<num_of_state; i++){
+        make_result(i, i, state[i]);
+      }
+    }
+    make_button("sort_show", 25, 100*(N+5));
   }
 
   function init(){
@@ -373,12 +397,26 @@
     this.Click = function(e){
       console.log(""+self.name+" is clicked ");
       simulate();
+      sort_show_flag = false;
       scroll();
     }
 
     this.mCanvas.onclick = this.Click;
-
   };
+
+  function sort_show_button(name){
+    var self = this;
+    this.name = name;
+    this.mCanvas = document.getElementById(name);
+
+    this.Click = function(e){
+      console.log(""+self.name+" is clicked ");
+      sort_show_flag = !sort_show_flag;
+      show_results();
+    }
+
+    this.mCanvas.onclick = this.Click;
+  }
 
   function one_operation(index, op, state){
     var state_copy = [];
@@ -446,7 +484,7 @@
   function simulate(){
     console.log("num_of_state : "+num_of_state);
 
-    var state = [];
+    state = [];
     for(var i=0; i<num_of_state; i++){
       state.push(0);
     }
@@ -487,7 +525,7 @@
     }
     console.log("final state : "+state);
 
-    show_results(state);
+    show_results();
   };
 
   window.onload = function(){
