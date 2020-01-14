@@ -178,17 +178,6 @@
     document.body.appendChild(canvas);
   }
 
-  function index_converter(index){
-    var tmp=0;
-    var index_copy = index;
-    for(var i=0; i<N; i++){
-      tmp *= 2;
-      tmp += index_copy%2;
-      index_copy=Math.floor(index_copy/2);
-    }
-    return tmp
-  }
-
   function make_result_bar(index, val, width){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result-bar");
@@ -209,7 +198,7 @@
     var str="";
     var index_copy = index;
     for(var i=0; i<N; i++){
-      str += String(index_copy%2);
+      str = String(index_copy%2) + str;
       index_copy=Math.floor(index_copy/2);
     }
     return str;
@@ -232,12 +221,11 @@
   }
 
   function make_result(index, val){
-    var index_tmp = index_converter(index);
     //var width = (N+2)*25; canvasの幅を動的に変更しようとしてできなかった
     var width = 100;
-    make_result_bar(index_tmp, val, width);
+    make_result_bar(index, val, width);
     var index_string = index_converter_to_string(index);
-    make_result_index(index_tmp, index_string, width);
+    make_result_index(index, index_string, width);
   }
 
   function show_results(state){
