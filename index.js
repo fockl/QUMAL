@@ -33,6 +33,9 @@
     [0, 1]
   ];
 
+  const X_SHIFT = 0;
+  const Y_SHIFT = 50;
+
   function make_button(name, left, top){
     var button = document.createElement("button");
     button.setAttribute("id", name);
@@ -40,8 +43,8 @@
     button.setAttribute("type", "button");
     button.setAttribute("style", "cursor:pointer");
     button.style.position = "absolute";
-    button.style.left = left + "px";
-    button.style.top = top + "px";
+    button.style.left = left + X_SHIFT + "px";
+    button.style.top = top + Y_SHIFT + "px";
     var text = "";
     switch(name){
       case "wbutton1":
@@ -84,8 +87,8 @@
     canvas.setAttribute("class", "zero");
     canvas.setAttribute("id", "z"+y);
     canvas.style.position = "absolute";
-    canvas.style.left = 0 + "px";
-    canvas.style.top = 100*(y+1) + 0 + "px";
+    canvas.style.left = X_SHIFT + "px";
+    canvas.style.top = 100*(y+1) + Y_SHIFT + "px";
     var width = canvas.width;
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
@@ -128,8 +131,8 @@
     canvas.setAttribute("class", "operator");
     canvas.setAttribute("id", "c"+x+"-"+y);
     canvas.style.position = "absolute";
-    canvas.style.left = 100*(x+1) + "px";
-    canvas.style.top = 100*(y+1) + "px";
+    canvas.style.left = 100*(x+1) + X_SHIFT + "px";
+    canvas.style.top = 100*(y+1) + Y_SHIFT + "px";
     document.body.appendChild(canvas);
 
     canvas.object = new Operator_Cell(x,y);
@@ -170,8 +173,8 @@
     canvas.setAttribute("class", "result_left_top");
     canvas.setAttribute("id", "result_left_top");
     canvas.style.position = "absolute";
-    canvas.style.left = 50 + "px";
-    canvas.style.top = 100*(N+2) + "px";
+    canvas.style.left = 50 + X_SHIFT + "px";
+    canvas.style.top = 100*(N+2) + Y_SHIFT + "px";
     document.body.appendChild(canvas);
   }
 
@@ -191,8 +194,8 @@
     canvas.setAttribute("class", "result-bar");
     canvas.setAttribute("id", "result-bar-"+index);
     canvas.style.position = "absolute";
-    canvas.style.left = 100+index*width+"px";
-    canvas.style.top = 100*(N+2)+"px";
+    canvas.style.left = 100+index*width+X_SHIFT+"px";
+    canvas.style.top = 100*(N+2)+Y_SHIFT+"px";
     canvas.width = width;
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
@@ -217,8 +220,8 @@
     canvas.setAttribute("class", "result-index");
     canvas.setAttribute("id", "result-index-"+index);
     canvas.style.position = "absolute";
-    canvas.style.left = 100+index*width+"px";
-    canvas.style.top = 100*(N+2)+200+"px";
+    canvas.style.left = 100+index*width+X_SHIFT+"px";
+    canvas.style.top = 100*(N+2)+200+Y_SHIFT+"px";
     var ctx = canvas.getContext('2d');
     ctx.font = '64px serif';
     ctx.fillStyle = '#404040';
@@ -359,19 +362,19 @@
   };
 
   function scroll(){
+    /*
     var element = document.documentElement;
     var Target = element.scrollHeight - element.clientHeight;
     var Pos = window.pageYOffset;
     var move = Target/20;
     var interval = 1000/100;
-    /*
     window.scrollBy(0, move);
     var rep = setTimeout(scroll, interval);
     if(Pos === Target){
       clearTimeout(rep);
     }
-    */
     //window.scrollTo(0, Target);
+    */
   }
 
   function simulate_button(name){

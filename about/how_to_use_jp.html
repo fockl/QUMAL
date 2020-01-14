@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <title>How To Use</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <a href="../index.html" id="top">Back to QUMAL</a>
+
+    <h1>使い方</h1>
+
+    <h2>素子の置き方</h2>
+    <p>
+    素子を置く/変更するには，右上にあるControllをOFFにします．
+    </p>
+    <p>
+    <img src="./Figures/Controll_off.png">
+    </p>
+    <p>
+    ControllをOFFにした状態で各素子をクリックすると，素子の種類が変わります．
+    </p>
+    <table border="3">
+      <tr>
+        <th width="60" height="20" align=center>演算子</th><th width="60" height="20">表示</th>
+      </tr>
+      <tr>
+        <td height="60" align=center>I</td><td height="60"><img src="../Figures/I.png" class="operator"></td>
+      </tr>
+      <tr>
+        <td height="60" align=center>X</td><td height="60"><img src="../Figures/X.png" class="operator"></td>
+      </tr>
+      <tr>
+        <td height="60" align=center>Z</td><td height="60"><img src="../Figures/Z.png" class="operator"></td>
+      </tr>
+      <tr>
+        <td height="60" align=center>H</td><td height="60"><img src="../Figures/H.png" class="operator"></td>
+      </tr>
+    </table>
+
+    <h2>制御素子の置き方</h2>
+    <p>
+    制御素子を置くには，まずControllをOFFにした状態で，ターゲットqubitに対する素子を置きます．
+    </p>
+    <p>
+    次に，ControllをONにして，先ほど置いた素子をクリックします．
+    </p>
+    <p>
+    コントロールqubitの変更は，ControllをONにします．
+    </p>
+    <p>
+    <img src="./Figures/Controll_on.png">
+    </p>
+    <p>
+    ControllをONにした状態で素子をクリックすると，各qubitをコントロールする/しないを変更できます．
+    </p>
+
+    <table border="3">
+      <tr>
+        <th width="60" height="20" align=center>演算子</th><th width="60" height="20">表示</th>
+      </tr>
+      <tr>
+        <td height="60" align=center>neutral</td><td height="60"><img src="../Figures/CI.png" class="operator"></td>
+      </tr>
+      <tr>
+        <td height="60" align=center>controll</td><td height="60"><img src="../Figures/SCI.png" class="operator"></td>
+      </tr>
+    </table>
+
+    <p>
+    ControllをONにした状態では素子の種類の変更はできません．
+    </p>
+
+    <h2>制御の外し方</h2>
+    <p>
+    制御素子を変更するには，ControllをOFFにして素子をクリックしてください．
+    </p>
+
+    <h2>qubit数の変え方</h2>
+    <p>
+    qubit数を変更するには，上部にあるAdd qubit/Delete qubitのボタンを押してください．
+    </p>
+    <p>
+    <img src="./Figures/Qubit.png">
+    </p>
+    <p>
+    qubit数は1以上の任意の数を取れますが，計算時間が指数関数的に増加するため，増やしすぎないようにしてください．
+    </p>
+
+    <h2>ゲート数の変え方</h2>
+    <p>
+    ゲート数を変更するには，上部にあるAdd gate/Delete gateのボタンを押してください．
+    </p>
+    <p>
+    <img src="./Figures/Gate.png">
+    </p>
+
+    <h2>Simulation方法と結果の見方</h2>
+    <p>
+    計算を実行するには，上部にあるSimulationのボタンを押してください．
+    </p>
+    <p>
+    <img src="./Figures/Simulate.png">
+    </p>
+
+    <p>
+    結果は下部に表示されます．素子を何も置かないで実行すると，次のような結果が表示されます．
+    </p>
+    <p>
+    <img src="./Figures/Simple_result.png" width="25%" height="25%">
+    </p>
+    <p>
+    バーの縦軸は観測確率を表します．この場合，状態00の観測確率が1であることを示します．
+    状態の右側の数字がグラフの上のqubit, 左側の数字がグラフの下のqubitに対応します．
+    </p>
+
+
+
+  </body>
+</html>

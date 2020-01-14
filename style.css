@@ -11,8 +11,6 @@ canvas{
   height: 100px;
 }
 .zero:hover{
-  background-color: lightgreen;
-  border-color: lightgreen;
 }
 .result-bar{
   border-style: solid;
@@ -33,7 +31,7 @@ canvas{
 
 .controllArea{
   position: absolute;
-  top: 25px;
+  top: 75px;
   left: 525px;
   width: 120px;
   height: 50px;
@@ -68,6 +66,12 @@ canvas{
   color: #fff;
 }
 
+.how_to_use_jp{
+  position: absolute;
+  top: 25px;
+  left: 125px;
+}
+
 button{
   display: inline-block;
   padding: 0.5em 1em;
@@ -78,9 +82,6 @@ button{
   height: 50px;
 }
 .nbutton1{
-  position: "absolute";
-  left: 225px;
-  top: 25px;
 }
 .nbutton1:active{
   -webkit-transform: translateY(4px);
@@ -88,9 +89,6 @@ button{
   border-bottom: none;
 }
 .nbutton2{
-  position: "absolute";
-  left: 325px;
-  top: 25px;
 }
 .nbutton2:active{
   -webkit-transform: translateY(4px);
@@ -98,9 +96,6 @@ button{
   border-bottom: none;
 }
 .wbutton1{
-  position: "absolute";
-  left: 25px;
-  top: 25px;
 }
 .wbutton1:active{
   -webkit-transform: translateY(4px);
@@ -108,9 +103,6 @@ button{
   border-bottom: none;
 }
 .wbutton2{
-  position: "absolute";
-  left: 125px;
-  top: 25px;
 }
 .wbutton2:active{
   -webkit-transform: translateY(4px);
@@ -118,9 +110,6 @@ button{
   border-bottom: none;
 }
 .simulate{
-  position: "absolute";
-  left: 425px;
-  top: 25px;
   background: #00ffff;
   color: red;
 }
@@ -128,4 +117,20 @@ button{
   -webkit-transform: translateY(4px);
   transform: translateY(4px);
   border-bottom: none;
+}
+
+a{
+  color: #0073bc;
+}
+a:link{
+  color: #0073bc;
+}
+a:visited{
+  color: #0073bc;
+}
+a:hover{
+  color: #b7dbf2;
+}
+a:active{
+  color: #4ca4e8;
 }
