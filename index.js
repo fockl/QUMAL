@@ -4,35 +4,71 @@
   var state = [];
   var sort_show_flag = false;
   var num_of_state = 4;
-  const Operator_name = ["I", "X", "Z", "H"];
+  const Operator_name = ["I", "X", "Z", "H", "S", "Sd", "T", "Td"];
   const sqrt2 = Math.sqrt(2);
+
+  function Complex(real, imag){
+    if (!(this instanceof Complex)){
+      return new Complex(real, imag);
+    }
+    this.real = real;
+    this.imag = imag;
+  }
+
+  function Complex_plus(c1, c2){
+    return new Complex(c1.real+c2.real, c1.imag+c2.imag);
+  }
+  function Complex_prod(c1, c2){
+    return new Complex(c1.real*c2.real-c1.imag*c2.imag, c1.real*c2.imag+c2.real*c1.imag);
+  }
+
+  function Complex_abs(c){
+    return Math.sqrt(c.real*c.real+c.imag*c.imag);
+  }
+
   const Operators = [
     [
-      [1, 0],
-      [0, 1]
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(1.0, 0.0)]
     ],
     [
-      [0, 1],
-      [1, 0]
+      [Complex(0.0, 0.0), Complex(1.0, 0.0)],
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)]
     ],
     [
-      [1, 0],
-      [0, -1]
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(-1.0, 0.0)]
     ],
     [
-      [1/sqrt2, 1/sqrt2],
-      [1/sqrt2, -1/sqrt2]
+      [Complex(1/sqrt2, 0.0), Complex(1/sqrt2, 0.0)],
+      [Complex(1/sqrt2, 0.0), Complex(-1/sqrt2, 0.0)]
+    ],
+    [
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(0.0, 1.0)]
+    ],
+    [
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(0.0, -1.0)]
+    ],
+    [
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(1/sqrt2, 1/sqrt2)]
+    ],
+    [
+      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+      [Complex(0.0, 0.0), Complex(1/sqrt2, -1/sqrt2)]
     ]
   ];
 
   const Operator0 = [
-    [1, 0],
-    [0, 0]
+    [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+    [Complex(0.0, 0.0), Complex(0.0, 0.0)]
   ];
 
   const Operator1 = [
-    [0, 0],
-    [0, 1]
+    [Complex(0.0, 0.0), Complex(0.0, 0.0)],
+    [Complex(0.0, 0.0), Complex(1.0, 0.0)]
   ];
 
   const X_SHIFT = 0;
@@ -201,8 +237,7 @@
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = 'blue';
-    var val_tmp = Math.abs(val)*Math.abs(val);
-    ctx.fillRect(width/4, height*(1-val_tmp), width/2, height*val_tmp);
+    ctx.fillRect(width/4, height*(1-val), width/2, height*val);
     document.body.appendChild(canvas);
   }
 
@@ -244,8 +279,10 @@
     delete_results();
     make_result_left_top();
     var state_all = [];
+    console.log("show_results")
     for(var i=0; i<num_of_state; i++){
-      state_all.push([state[i], i]);
+      console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
+      state_all.push([Complex_abs(state[i])*Complex_abs(state[i]), i]);
     }
     state_all.sort(function(a, b){return b[0]-a[0]});
     if(sort_show_flag){
@@ -254,7 +291,7 @@
       }
     }else{
       for(var i=0; i<num_of_state; i++){
-        make_result(i, i, state[i]);
+        make_result(i, i, Complex_abs(state[i])*Complex_abs(state[i]));
       }
     }
     make_button("sort_show", 25, 100*(N+5));
@@ -396,8 +433,8 @@
 
     this.Click = function(e){
       console.log(""+self.name+" is clicked ");
-      simulate();
       sort_show_flag = false;
+      simulate();
       scroll();
     }
 
@@ -421,7 +458,7 @@
   function one_operation(index, op, state){
     var state_copy = [];
     for(var i=0; i<num_of_state; i++){
-      state_copy.push(0);
+      state_copy.push(Complex(0.0, 0.0));
     }
 
     var IX = 1;
@@ -439,7 +476,7 @@
           for(var iz=0; iz<IZ; iz++){
             var state1 = ix*2*IZ + ii*IZ + iz;
             var state2 = ix*2*IZ + iy*IZ + iz;
-            state_copy[state1] += op[ii][iy]*state[state2];
+            state_copy[state1] = Complex_plus(state_copy[state1], Complex_prod(op[ii][iy], state[state2]));
           }
         }
       }
@@ -463,9 +500,9 @@
     var state_copy2 = [];
     var state_copy = []
     for(var i=0; i<num_of_state; i++){
-      state_copy.push(0);
-      state_copy1.push(0);
-      state_copy2.push(0);
+      state_copy.push(Complex(0.0, 0.0));
+      state_copy1.push(Complex(0.0, 0.0));
+      state_copy2.push(Complex(0.0, 0.0));
     }
     if(controll_set.length>0){
       var last_index = controll_set.pop();
@@ -473,7 +510,7 @@
       state_copy2 = one_operation(last_index, Operator1, state);
       state_copy2 = some_operations(index_set, id_set, controll_set, state_copy2);
       for(var i=0; i<num_of_state; i++){
-        state_copy[i] = state_copy1[i] + state_copy2[i];
+        state_copy[i] = Complex_plus(state_copy1[i], state_copy2[i]);
       }
     }else{
       state_copy = operations(index_set, id_set, state);
@@ -486,12 +523,14 @@
 
     state = [];
     for(var i=0; i<num_of_state; i++){
-      state.push(0);
+      state.push(Complex(0.0, 0.0));
     }
 
-    state[0] = 1;
+    state[0] = Complex(1.0, 0.0);
 
-    console.log("state : "+state);
+    console.log(Complex(1.0, 0.0));
+
+    console.log("state : "+JSON.stringify(state));
 
     for(var x=0; x<W; x++){
       var index_set = [];
@@ -509,7 +548,7 @@
         }
       }
 
-      console.log(index_set, id_set);
+      console.log(index_set, JSON.stringify(id_set));
 
       if(id_set.length==0){
         continue;
@@ -521,9 +560,9 @@
         state = some_operations(index_set, id_set, controll_set, state);
       }
 
-      console.log("middle state : "+state);
+      console.log("middle state : "+JSON.stringify(state));
     }
-    console.log("final state : "+state);
+    console.log("final state : "+JSON.stringify(state));
 
     show_results();
   };
