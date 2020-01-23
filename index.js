@@ -61,6 +61,24 @@
     ]
   ];
 
+  /*
+   * Rx(theta) = [
+   *   [Complex(Math.cos(theta/2, 0.0)), Complex(0.0, -Math.sin(theta/2))],
+   *   [-Complex(0.0, Math.sin(theta/2)), Complex(Math.cos(theta/2), 0.0)]
+   * ]
+   *
+   * Ry(theta) = [
+   *   [Complex(Math.cos(theta/2, 0.0)), Complex(-Math.sin(theta/2), 0.0)],
+   *   [Complex(-Math.sin(theta/2, 0.0)), Complex(Math.cos(theta/2), 0.0)]
+   * ]
+   *
+   * Rz(theta) = [
+   *   [Complex(1.0, 0.0), Complex(0.0, 0.0)],
+   *   [Complex(0.0, 0.0), Complex(Math.cos(theta), Math.sin(theta))]
+   * ]
+   *
+  */
+
   const Operator0 = [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(0.0, 0.0)]
