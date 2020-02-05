@@ -259,10 +259,10 @@
     document.body.appendChild(canvas);
   }
 
-  function index_converter_to_string(index){
+  function index_converter_to_string(index, show_elements){
     var str="";
     var index_copy = index;
-    for(var i=0; i<N; i++){
+    for(var i=0; i<show_elements.length; i++){
       str = String(index_copy%2) + str;
       index_copy=Math.floor(index_copy/2);
     }
@@ -285,32 +285,57 @@
     document.body.appendChild(canvas);
   }
 
-  function make_result(index, pos, val){
+  function make_result(index, pos, val, show_elements){
     //var width = (N+2)*25; canvasの幅を動的に変更しようとしてできなかった
     var width = 100;
     make_result_bar(index, pos, val, width);
-    var index_string = index_converter_to_string(index);
+    var index_string = index_converter_to_string(index, show_elements);
     make_result_index(index, pos, index_string, width);
+  }
+
+  function calc_index(i, show_elements){
+    var ans = 0;
+    for(var j=0; j<show_elements.length; j++){
+      var tmp = 1<<(N-show_elements-1);
+      ans <<= 1;
+      if((tmp&i)!=0){
+        ans+=1;
+      }
+      console.log(i, tmp, tmp&i, ans);
+    }
+    console.log(ans);
+    return ans;
   }
 
   function show_results(){
     delete_results();
     make_result_left_top();
     var state_all = [];
+    var show_elements = [0];
     console.log("show_results")
+    var List = new Map();
     for(var i=0; i<num_of_state; i++){
+      /*
       console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
-      state_all.push([Complex_abs(state[i])*Complex_abs(state[i]), i]);
+      state_all.push([i, Complex_abs(state[i])*Complex_abs(state[i])]);
+      */
+      var index = calc_index(i, show_elements);
+      var value = 0;
+      if(List.has(index)){
+        var value = List.get(index);
+      }
+      List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
     }
-    state_all.sort(function(a, b){return b[0]-a[0]});
+    List.forEach((value, key)=>{
+      state_all.push([key, value]);
+    });
     if(sort_show_flag){
-      for(var i=0; i<num_of_state; i++){
-        make_result(state_all[i][1], i, state_all[i][0]);
-      }
+      state_all.sort(function(a, b){return b[1]-a[1]});
     }else{
-      for(var i=0; i<num_of_state; i++){
-        make_result(i, i, Complex_abs(state[i])*Complex_abs(state[i]));
-      }
+      state_all.sort(function(a, b){return a[0]-b[0]});
+    }
+    for(var i=0; i<state_all.length; i++){
+      make_result(state_all[i][0], i, state_all[i][1], show_elements);
     }
     make_button("sort_show", 25, 100*(N+5));
   }
