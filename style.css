@@ -80,6 +80,8 @@ button{
   border-radius: 3px;
   width: 75px;
   height: 50px;
+  position: absolute;
+  font-size: 12px;
 }
 .nbutton1{
 }

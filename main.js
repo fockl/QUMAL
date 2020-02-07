@@ -5,8 +5,11 @@
   var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = ["I", "X", "Z", "H", "S", "Sd", "T", "Td"];
-  const sqrt2 = Math.sqrt(2);
+  //const sqrt2 = math.sqrt(2);
 
+  let Sim = new Simulate();
+
+  /*
   function Complex(real, imag){
     if (!(this instanceof Complex)){
       return new Complex(real, imag);
@@ -60,6 +63,7 @@
       [Complex(0.0, 0.0), Complex(1/sqrt2, -1/sqrt2)]
     ]
   ];
+  */
 
   /*
    * Rx(theta) = [
@@ -79,6 +83,7 @@
    *
   */
 
+  /*
   const Operator0 = [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(0.0, 0.0)]
@@ -88,6 +93,7 @@
     [Complex(0.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(1.0, 0.0)]
   ];
+  */
 
   const X_SHIFT = 0;
   const Y_SHIFT = 50;
@@ -293,10 +299,10 @@
     make_result_index(index, pos, index_string, width);
   }
 
-  function calc_index(i, show_elements){
+  function calc_index(i, measure_indices){
     var ans = 0;
-    for(var j=0; j<show_elements.length; j++){
-      var tmp = 1<<(N-show_elements-1);
+    for(var j=0; j<measure_indices.length; j++){
+      var tmp = 1<<(N-1-measure_indices[j]);
       ans <<= 1;
       if((tmp&i)!=0){
         ans+=1;
@@ -311,18 +317,16 @@
     delete_results();
     make_result_left_top();
     var state_all = [];
-    var show_elements = [0];
+    var measure_indices = [1];
     console.log("show_results")
     var List = new Map();
     for(var i=0; i<num_of_state; i++){
-      /*
-      console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
-      state_all.push([i, Complex_abs(state[i])*Complex_abs(state[i])]);
-      */
-      var index = calc_index(i, show_elements);
+      //console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
+      //state_all.push([i, Complex_abs(state[i])*Complex_abs(state[i])]);
+      var index = calc_index(i, measure_indices);
       var value = 0;
       if(List.has(index)){
-        var value = List.get(index);
+        value = List.get(index);
       }
       List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
     }
@@ -335,7 +339,7 @@
       state_all.sort(function(a, b){return a[0]-b[0]});
     }
     for(var i=0; i<state_all.length; i++){
-      make_result(state_all[i][0], i, state_all[i][1], show_elements);
+      make_result(state_all[i][0], i, state_all[i][1], measure_indices);
     }
     make_button("sort_show", 25, 100*(N+5));
   }
@@ -477,7 +481,8 @@
     this.Click = function(e){
       console.log(""+self.name+" is clicked ");
       sort_show_flag = false;
-      simulate();
+      state = Sim.simulate(W,N,num_of_state);
+      show_results();
       scroll();
     }
 
@@ -498,6 +503,7 @@
     this.mCanvas.onclick = this.Click;
   }
 
+  /*
   function one_operation(index, op, state){
     var state_copy = [];
     for(var i=0; i<num_of_state; i++){
@@ -609,6 +615,7 @@
 
     show_results();
   };
+  */
 
   window.onload = function(){
     init();
