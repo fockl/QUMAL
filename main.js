@@ -5,135 +5,32 @@
   var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = ["I", "X", "Z", "H", "S", "Sd", "T", "Td"];
-  //const sqrt2 = math.sqrt(2);
 
   let Sim = new Simulate();
-
-  /*
-  function Complex(real, imag){
-    if (!(this instanceof Complex)){
-      return new Complex(real, imag);
-    }
-    this.real = real;
-    this.imag = imag;
-  }
-
-  function Complex_plus(c1, c2){
-    return new Complex(c1.real+c2.real, c1.imag+c2.imag);
-  }
-  function Complex_prod(c1, c2){
-    return new Complex(c1.real*c2.real-c1.imag*c2.imag, c1.real*c2.imag+c2.real*c1.imag);
-  }
-
-  function Complex_abs(c){
-    return Math.sqrt(c.real*c.real+c.imag*c.imag);
-  }
-
-  const Operators = [
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(1.0, 0.0)]
-    ],
-    [
-      [Complex(0.0, 0.0), Complex(1.0, 0.0)],
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)]
-    ],
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(-1.0, 0.0)]
-    ],
-    [
-      [Complex(1/sqrt2, 0.0), Complex(1/sqrt2, 0.0)],
-      [Complex(1/sqrt2, 0.0), Complex(-1/sqrt2, 0.0)]
-    ],
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(0.0, 1.0)]
-    ],
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(0.0, -1.0)]
-    ],
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(1/sqrt2, 1/sqrt2)]
-    ],
-    [
-      [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-      [Complex(0.0, 0.0), Complex(1/sqrt2, -1/sqrt2)]
-    ]
-  ];
-  */
-
-  /*
-   * Rx(theta) = [
-   *   [Complex(Math.cos(theta/2, 0.0)), Complex(0.0, -Math.sin(theta/2))],
-   *   [-Complex(0.0, Math.sin(theta/2)), Complex(Math.cos(theta/2), 0.0)]
-   * ]
-   *
-   * Ry(theta) = [
-   *   [Complex(Math.cos(theta/2, 0.0)), Complex(-Math.sin(theta/2), 0.0)],
-   *   [Complex(-Math.sin(theta/2, 0.0)), Complex(Math.cos(theta/2), 0.0)]
-   * ]
-   *
-   * Rz(theta) = [
-   *   [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-   *   [Complex(0.0, 0.0), Complex(Math.cos(theta), Math.sin(theta))]
-   * ]
-   *
-  */
-
-  /*
-  const Operator0 = [
-    [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-    [Complex(0.0, 0.0), Complex(0.0, 0.0)]
-  ];
-
-  const Operator1 = [
-    [Complex(0.0, 0.0), Complex(0.0, 0.0)],
-    [Complex(0.0, 0.0), Complex(1.0, 0.0)]
-  ];
-  */
 
   const X_SHIFT = 0;
   const Y_SHIFT = 50;
 
   function make_button(name, left, top){
-    var button = document.createElement("button");
-    button.setAttribute("id", name);
-    button.setAttribute("class", name);
-    button.setAttribute("type", "button");
-    button.setAttribute("style", "cursor:pointer");
-    button.style.position = "absolute";
+    if(name==="sort_show" || name==="simulate"){
+      let button = document.createElement("button");
+      button.setAttribute("id", name);
+      button.setAttribute("class", name);
+      button.setAttribute("type", "button");
+      button.setAttribute("style", "cursor:pointer");
+      if(name==="sort_show"){
+        button.innerHTML = "SORT";
+      }else if(name==="simulate"){
+        button.innerHTML = "Simulate";
+      }
+      document.body.appendChild(button);
+    }
+    console.log(name);
+    let button = document.getElementById(name);
     button.style.left = left + X_SHIFT + "px";
     button.style.top = top + Y_SHIFT + "px";
-    var text = "";
-    switch(name){
-      case "wbutton1":
-        text = "Add gate";
-        break;
-      case "wbutton2":
-        text = "Delete gate";
-        break;
-      case "nbutton1":
-        text = "Add qubit";
-        break;
-      case "nbutton2":
-        text = "Delete qubit";
-        break;
-      case "simulate":
-        text = "Simulate";
-        break;
-      case "sort_show":
-        text = "SORT";
-        break;
-      default:
-        break;
-    }
-    button.innerHTML = text;
-    button.style.fontSize = "12px";
-    document.body.appendChild(button);
 
+    /*
     switch(name){
       case "wbutton1":
       case "wbutton2":
@@ -148,6 +45,7 @@
         button.object = new sort_show_button(name);
         break;
     }
+    */
   }
 
   function make_zero(y){
@@ -342,14 +240,52 @@
       make_result(state_all[i][0], i, state_all[i][1], measure_indices);
     }
     make_button("sort_show", 25, 100*(N+5));
+    document.querySelector('.sort_show').addEventListener('click', () => {
+      sort_show_flag = !sort_show_flag;
+      show_results();
+    })
   }
 
   function init(){
     make_button("wbutton1", 25, 25);
+    document.querySelector('.wbutton1').addEventListener('click', () => {
+      for(let y=0; y<N; ++y) make_operator(W,y);
+      W++;
+    })
     make_button("wbutton2", 125, 25);
+    document.querySelector('.wbutton2').addEventListener('click', () => {
+      W--;
+      if(W==0) W=1;
+      else for(let y=0; y<N; ++y) delete_operator(W,y);
+    })
     make_button("nbutton1", 225, 25);
+    document.querySelector('.nbutton1').addEventListener('click', () => {
+      delete_results();
+      make_zero(N);
+      for(let x=0; x<W; ++x) make_operator(x,N);
+      N++;
+      num_of_state *= 2;
+    })
     make_button("nbutton2", 325, 25);
+    document.querySelector('.nbutton2').addEventListener('click', () => {
+      delete_results();
+      N--;
+      if(N==0){
+        N=1;
+      }else{
+        num_of_state/=2;
+        delete_zero(N);
+        for(let x=0; x<W; ++x) delete_operator(x,N);
+      }
+    })
+
     make_button("simulate", 425, 25);
+    document.querySelector('.simulate').addEventListener('click', () => {
+      sort_show_flag = false;
+      state = Sim.simulate(W,N,num_of_state);
+      show_results();
+      scroll();
+    })
     check_switch();
 
     for(var y=0; y<N; y++){
@@ -409,6 +345,7 @@
     this.mCanvas.onclick = this.Click;
   };
 
+  /*
   function WN_button(name){
     var self = this;
     this.name = name;
@@ -456,6 +393,7 @@
 
     this.mCanvas.onclick = this.Click;
   };
+  */
 
   function scroll(){
     /*
@@ -473,6 +411,7 @@
     */
   }
 
+  /*
   function simulate_button(name){
     var self = this;
     this.name = name;
@@ -488,7 +427,9 @@
 
     this.mCanvas.onclick = this.Click;
   };
+  */
 
+  /*
   function sort_show_button(name){
     var self = this;
     this.name = name;
@@ -502,119 +443,6 @@
 
     this.mCanvas.onclick = this.Click;
   }
-
-  /*
-  function one_operation(index, op, state){
-    var state_copy = [];
-    for(var i=0; i<num_of_state; i++){
-      state_copy.push(Complex(0.0, 0.0));
-    }
-
-    var IX = 1;
-    var IZ = 1;
-    for(var i=0; i<index; i++){
-      IX *= 2;
-    }
-    for(var i=index+1; i<N; i++){
-      IZ *= 2;
-    }
-
-    for(var ii=0; ii<2; ii++){
-      for(var ix=0; ix<IX; ix++){
-        for(var iy=0; iy<2; iy++){
-          for(var iz=0; iz<IZ; iz++){
-            var state1 = ix*2*IZ + ii*IZ + iz;
-            var state2 = ix*2*IZ + iy*IZ + iz;
-            state_copy[state1] = Complex_plus(state_copy[state1], Complex_prod(op[ii][iy], state[state2]));
-          }
-        }
-      }
-    }
-
-    return state_copy;
-  }
-
-  function operations(index_set, id_set, state){
-    for(var i=0; i<id_set.length; i++){
-      var state_copy = one_operation(index_set[i], Operators[id_set[i]], state);
-      for(var j=0; j<num_of_state; j++){
-        state[j] = state_copy[j];
-      }
-    }
-    return state
-  }
-
-  function some_operations(index_set, id_set, controll_set, state){
-    var state_copy1 = [];
-    var state_copy2 = [];
-    var state_copy = []
-    for(var i=0; i<num_of_state; i++){
-      state_copy.push(Complex(0.0, 0.0));
-      state_copy1.push(Complex(0.0, 0.0));
-      state_copy2.push(Complex(0.0, 0.0));
-    }
-    if(controll_set.length>0){
-      var last_index = controll_set.pop();
-      state_copy1 = one_operation(last_index, Operator0, state);
-      state_copy2 = one_operation(last_index, Operator1, state);
-      state_copy2 = some_operations(index_set, id_set, controll_set, state_copy2);
-      for(var i=0; i<num_of_state; i++){
-        state_copy[i] = Complex_plus(state_copy1[i], state_copy2[i]);
-      }
-    }else{
-      state_copy = operations(index_set, id_set, state);
-    }
-    return state_copy;
-  }
-
-  function simulate(){
-    console.log("num_of_state : "+num_of_state);
-
-    state = [];
-    for(var i=0; i<num_of_state; i++){
-      state.push(Complex(0.0, 0.0));
-    }
-
-    state[0] = Complex(1.0, 0.0);
-
-    console.log(Complex(1.0, 0.0));
-
-    console.log("state : "+JSON.stringify(state));
-
-    for(var x=0; x<W; x++){
-      var index_set = [];
-      var id_set = [];
-      var controll_set = []
-      var controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
-      for(var y=0; y<N; y++){
-        var canvas = document.getElementById("c"+x+"-"+y);
-        if(canvas.object.Operator_id!=0){
-          index_set.push(y);
-          id_set.push(canvas.object.Operator_id);
-        }
-        if(canvas.object.see_flag){
-          controll_set.push(y);
-        }
-      }
-
-      console.log(index_set, JSON.stringify(id_set));
-
-      if(id_set.length==0){
-        continue;
-      }
-
-      if(!controll_flag){
-        state = operations(index_set, id_set, state);
-      }else{
-        state = some_operations(index_set, id_set, controll_set, state);
-      }
-
-      console.log("middle state : "+JSON.stringify(state));
-    }
-    console.log("final state : "+JSON.stringify(state));
-
-    show_results();
-  };
   */
 
   window.onload = function(){
