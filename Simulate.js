@@ -174,14 +174,19 @@ class Simulate{
       let index_set = [];
       let id_set = [];
       let controll_set = []
-      let controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
+      //let controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
+      let line_flag = document.getElementById("c"+x+"-0").object.line_flag;
       for(let y=0; y<this.N; y++){
         let canvas = document.getElementById("c"+x+"-"+y);
         if(canvas.object.Operator_id!=0){
           index_set.push(y);
-          id_set.push(canvas.object.Operator_id);
+          if(canvas.object.line_flag==1){
+            id_set.push(canvas.object.Operator_id-1);
+          }else{
+            id_set.push(canvas.object.Operator_id);
+          }
         }
-        if(canvas.object.see_flag){
+        if(line_flag===1 && canvas.object.Operator_id===1){
           controll_set.push(y);
         }
       }
@@ -192,7 +197,7 @@ class Simulate{
         continue;
       }
 
-      if(!controll_flag){
+      if(line_flag===0){
         state = this.operations(index_set, id_set, state);
       }else{
         state = this.some_operations(index_set, id_set, controll_set, state);
