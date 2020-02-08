@@ -14,10 +14,10 @@
   const X_SHIFT = 0;
   const Y_SHIFT = 50;
 
-  function make_button(name, left, top){
+  function make_button(name, left, top, id_name){
     if(name==="sort_show" || name==="simulate"){
       let button = document.createElement("button");
-      button.setAttribute("id", name);
+      button.setAttribute("id", id_name);
       button.setAttribute("class", name);
       button.setAttribute("type", "button");
       button.setAttribute("style", "cursor:pointer");
@@ -29,7 +29,7 @@
       document.body.appendChild(button);
     }
     console.log(name);
-    let button = document.getElementById(name);
+    let button = document.getElementById(id_name);
     button.style.left = left + X_SHIFT + "px";
     button.style.top = top + Y_SHIFT + "px";
   }
@@ -108,6 +108,16 @@
   }
 
   function delete_results(){
+    let canvases = document.querySelectorAll(".result_left_top");
+    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+    canvases = document.querySelectorAll(".result-bar");
+    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+    canvases = document.querySelectorAll(".result-index");
+    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+    canvases = document.querySelectorAll(".sort_show");
+    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+
+    /*
     var canvas = document.getElementById("result_left_top");
     if(canvas!=null) canvas.remove();
     for(var i=0; i<num_of_state; i++){
@@ -118,25 +128,26 @@
     }
     var button = document.getElementById("sort_show");
     if(button!=null) button.remove();
+    */
   }
 
-  function make_result_left_top(){
+  function make_result_left_top(shift){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result_left_top");
     canvas.setAttribute("id", "result_left_top");
     canvas.style.position = "absolute";
     canvas.style.left = 50 + X_SHIFT + "px";
-    canvas.style.top = 100*(N+2) + Y_SHIFT + "px";
+    canvas.style.top = 100*(N+2) + Y_SHIFT + 300*shift + "px";
     document.body.appendChild(canvas);
   }
 
-  function make_result_bar(index, pos, val, width){
+  function make_result_bar(index, pos, val, width, shift){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result-bar");
     canvas.setAttribute("id", "result-bar-"+index);
     canvas.style.position = "absolute";
     canvas.style.left = 100+pos*width+X_SHIFT+"px";
-    canvas.style.top = 100*(N+2)+Y_SHIFT+"px";
+    canvas.style.top = 100*(N+2)+Y_SHIFT+300*shift+"px";
     canvas.width = width;
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
@@ -155,13 +166,13 @@
     return str;
   }
 
-  function make_result_index(index, pos, name, width){
+  function make_result_index(index, pos, name, width, shift){
     var canvas = document.createElement("canvas");
     canvas.setAttribute("class", "result-index");
     canvas.setAttribute("id", "result-index-"+index);
     canvas.style.position = "absolute";
     canvas.style.left = 100+pos*width+X_SHIFT+"px";
-    canvas.style.top = 100*(N+2)+200+Y_SHIFT+"px";
+    canvas.style.top = 100*(N+2)+200+Y_SHIFT+300*shift+"px";
     var ctx = canvas.getContext('2d');
     ctx.font = '64px serif';
     ctx.fillStyle = '#404040';
@@ -171,12 +182,12 @@
     document.body.appendChild(canvas);
   }
 
-  function make_result(index, pos, val, show_elements_length){
+  function make_result(index, pos, val, show_elements_length, shift){
     //var width = (N+2)*25; canvasの幅を動的に変更しようとしてできなかった
     var width = 100;
-    make_result_bar(index, pos, val, width);
+    make_result_bar(index, pos, val, width, shift);
     var index_string = index_converter_to_string(index, show_elements_length);
-    make_result_index(index, pos, index_string, width);
+    make_result_index(index, pos, index_string, width, shift);
   }
 
   /*
@@ -197,8 +208,6 @@
 
   function show_results(measure_List){
     delete_results();
-    make_result_left_top();
-    var state_all = [];
     //var measure_indices = [1];
     /*
     var measure_indices = [];
@@ -216,44 +225,49 @@
       List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
     }
     */
-    let List = measure_List[measure_List.length-1];
-    List.forEach((value, key)=>{
-      state_all.push([key, value]);
-    });
-    if(sort_show_flag){
-      state_all.sort(function(a, b){return b[1]-a[1]});
-    }else{
-      state_all.sort(function(a, b){return a[0]-b[0]});
+
+    for(let j=0; j<measure_List.length; ++j){
+      let state_all = [];
+      make_result_left_top(j);
+      let List = measure_List[j];
+      List.forEach((value, key)=>{
+        state_all.push([key, value]);
+      });
+      if(sort_show_flag){
+        state_all.sort(function(a, b){return b[1]-a[1]});
+      }else{
+        state_all.sort(function(a, b){return a[0]-b[0]});
+      }
+      let measure_indices_length = 0;
+      for(let i=0; (1<<i)<state_all.length; ++i){
+        measure_indices_length++;
+      }
+      for(var i=0; i<state_all.length; i++){
+        make_result(state_all[i][0], i, state_all[i][1], measure_indices_length, j);
+      }
+      make_button("sort_show", 20, 100*(N+4)+300*j+10, "sort_show"+j);
+      document.querySelector('#sort_show'+j).addEventListener('click', () => {
+        sort_show_flag = !sort_show_flag;
+        show_results(measure_List);
+      })
     }
-    let measure_indices_length = 0;
-    for(let i=0; (1<<i)<state_all.length; ++i){
-      measure_indices_length++;
-    }
-    for(var i=0; i<state_all.length; i++){
-      make_result(state_all[i][0], i, state_all[i][1], measure_indices_length);
-    }
-    make_button("sort_show", 25, 100*(N+5));
-    document.querySelector('.sort_show').addEventListener('click', () => {
-      sort_show_flag = !sort_show_flag;
-      show_results();
-    })
   }
 
   function init(){
-    make_button("wbutton1", 25, 25);
+    make_button("wbutton1", 25, 25, "wbutton1");
     document.querySelector('.wbutton1').addEventListener('click', () => {
       for(let y=0; y<N; ++y) make_operator(W,y);
       W++;
     })
 
-    make_button("wbutton2", 125, 25);
+    make_button("wbutton2", 125, 25, "wbutton2");
     document.querySelector('.wbutton2').addEventListener('click', () => {
       W--;
       if(W==0) W=1;
       else for(let y=0; y<N; ++y) delete_operator(W,y);
     })
 
-    make_button("nbutton1", 225, 25);
+    make_button("nbutton1", 225, 25, "nbutton1");
     document.querySelector('.nbutton1').addEventListener('click', () => {
       delete_results();
       make_zero(N);
@@ -262,7 +276,7 @@
       num_of_state *= 2;
     })
 
-    make_button("nbutton2", 325, 25);
+    make_button("nbutton2", 325, 25, "nbutton2");
     document.querySelector('.nbutton2').addEventListener('click', () => {
       delete_results();
       N--;
@@ -275,7 +289,7 @@
       }
     })
 
-    make_button("simulate", 425, 25);
+    make_button("simulate", 425, 25, "simulate");
     document.querySelector('.simulate').addEventListener('click', () => {
       sort_show_flag = false;
       let results = Sim.simulate(W,N,num_of_state);
