@@ -65,17 +65,6 @@
     var img = new Image();
     var id = canvas.object.Operator_id;
     var flag = canvas.object.line_flag;
-    /*
-    if(canvas.object.controll_flag){
-      if(canvas.object.see_flag){
-        img.src = "./Figures/SC" + Operator_name[id] + ".png";
-      }else{
-        img.src = "./Figures/C" + Operator_name[id] + ".png";
-      }
-    }else{
-      img.src = "./Figures/" + Operator_name[id] + ".png";
-    }
-    */
     console.log(flag, id);
     img.src = "./Figures/" + Operator_name[flag][id] + ".png";
     ctx.clearRect(0, 0, width, height);
@@ -119,19 +108,27 @@
     for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
     canvases = document.querySelectorAll(".sort_show");
     for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+    canvases = document.querySelectorAll(".result-canvas");
+    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
+  }
 
-    /*
-    var canvas = document.getElementById("result_left_top");
-    if(canvas!=null) canvas.remove();
-    for(var i=0; i<num_of_state; i++){
-      canvas = document.getElementById("result-bar-"+i);
-      if(canvas!=null) canvas.remove();
-      canvas = document.getElementById("result-index-"+i);
-      if(canvas!=null) canvas.remove();
-    }
-    var button = document.getElementById("sort_show");
-    if(button!=null) button.remove();
-    */
+  function make_result_canvas(){
+    let canvas = document.createElement("canvas");
+    canvas.setAttribute("class", "result-canvas");
+    canvas.setAttribute("id", "result-canvas");
+    canvas.style.position = "absolute";
+    canvas.style.left = 50 + X_SHIFT + "px";
+    canvas.style.top = 100*(N+2) + Y_SHIFT + "px";
+    document.body.appendChild(canvas);
+  }
+
+  function draw_point_on_canvas(x, val){
+    let canvas = document.getElementById("result-canvas");
+    let ctx = canvas.getContext('2d');
+    let width = canvas.width;
+    let height = canvas.height;
+    ctx.fillStyle = 'blue';
+    ctx.fillRect(x*width, height*(1-val), 2, 2);
   }
 
   function make_result_left_top(shift){
@@ -193,42 +190,19 @@
     make_result_index(index, pos, index_string, width, shift);
   }
 
-  /*
-  function calc_index(i, measure_indices){
-    var ans = 0;
-    for(var j=0; j<measure_indices.length; j++){
-      var tmp = 1<<(N-1-measure_indices[j]);
-      ans <<= 1;
-      if((tmp&i)!=0){
-        ans+=1;
-      }
-      console.log(i, tmp, tmp&i, ans);
-    }
-    console.log(ans);
-    return ans;
-  }
-  */
-
   function show_results(measure_List){
     delete_results();
-    //var measure_indices = [1];
-    /*
-    var measure_indices = [];
-    for(let i=0; i<N; ++i) measure_indices.push(i);
-    console.log("show_results")
-    var List = new Map();
-    for(var i=0; i<num_of_state; i++){
-      //console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
-      //state_all.push([i, Complex_abs(state[i])*Complex_abs(state[i])]);
-      var index = calc_index(i, measure_indices);
-      var value = 0;
-      if(List.has(index)){
-        value = List.get(index);
-      }
-      List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
-    }
-    */
 
+    make_result_canvas();
+
+    for(let j=0; j<measure_List.length; ++j){
+      let List = measure_List[j];
+      List.forEach((value, key) => {
+        draw_point_on_canvas((j+0.5)/measure_List.length, value);
+      })
+    }
+
+    /*
     for(let j=0; j<measure_List.length; ++j){
       let state_all = [];
       make_result_left_top(j);
@@ -254,6 +228,7 @@
         show_results(measure_List);
       })
     }
+    */
   }
 
   function init(){
@@ -382,21 +357,15 @@
         this.Operator_id = document.getElementById("c"+iIdx+"-"+0).object.Operator_id;
       }
     }
-    // line_flag = 0 (nothing) 1 (controll) // 2 (for start) 3 (for end)
-    /*
-    if(iIdy>0){
-      this.controll_flag = document.getElementById("c"+iIdx+"-"+0).object.controll_flag;
-    }else{
-      this.controll_flag = false;
-    }
-    */
-    //this.see_flag = false;
+    // line_flag = 0 (nothing) 1 (controll) 2 (for)
     this.mCanvas = document.getElementById("c"+iIdx+"-"+iIdy);
 
     this.Click = function(e){
       console.log(""+self.mIdx+"-"+self.mIdy+" is clicked ");
       let controll_button = document.getElementById("controll");
       let for_button = document.getElementById("for");
+
+      self.theta = 0.0;
 
       if(for_button.checked){
         if(self.line_flag===2){
@@ -433,7 +402,6 @@
         }else{
           for(var y=0; y<N; y++){
             var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            //another_canvas.object.controll_flag = true;
             console.log("c"+self.mIdx+"-"+y+" is selected ");
             if(another_canvas.object.line_flag!==1){
               if(another_canvas.object.line_flag===2){
