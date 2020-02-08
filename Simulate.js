@@ -130,6 +130,30 @@ class Simulate{
     return state
   }
 
+  __calc_index(i, measure_set){
+    let ans = 0;
+    for(let j=0; j<measure_set.length; ++j){
+      let tmp = 1<<(this.N-1-measure_set[j]);
+      ans <<= 1;
+      if((tmp&i)!=0) ans += 1;
+    }
+    return ans;
+  }
+
+
+  measure_operations(index_set, id_set, measure_set, state){
+    let state_copy = [];
+    state_copy = this.operations(index_set, id_set, state);
+    let List = new Map();
+    for(let i=0; i<this.num_of_state; ++i){
+      let index = this.__calc_index(i, measure_set);
+      let value = 0;
+      if(List.has(index)) value = List.get(index);
+      List.set(index, Complex_abs(state_copy[i])*Complex_abs(state_copy[i])+value);
+    }
+    return [state_copy, List];
+  }
+
   some_operations(index_set, id_set, controll_set, state){
     let state_copy1 = [];
     let state_copy2 = [];
@@ -166,28 +190,29 @@ class Simulate{
 
     state[0] = Complex(1.0, 0.0);
 
-    console.log(Complex(1.0, 0.0));
-
     console.log("state : "+JSON.stringify(state));
+
+    let measure_List = [];
 
     for(let x=0; x<this.W; x++){
       let index_set = [];
       let id_set = [];
       let controll_set = []
+      let measure_set = []
       //let controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
       let line_flag = document.getElementById("c"+x+"-0").object.line_flag;
       for(let y=0; y<this.N; y++){
         let canvas = document.getElementById("c"+x+"-"+y);
         if(canvas.object.Operator_id!=0){
           index_set.push(y);
-          if(canvas.object.line_flag==1){
-            id_set.push(canvas.object.Operator_id-1);
-          }else{
-            id_set.push(canvas.object.Operator_id);
-          }
+          id_set.push(canvas.object.Operator_id-1);
         }
-        if(line_flag===1 && canvas.object.Operator_id===1){
-          controll_set.push(y);
+        if(canvas.object.Operator_id===1){
+          if(line_flag===0){
+            measure_set.push(y);
+          }else if(line_flag===1){
+            controll_set.push(y);
+          }
         }
       }
 
@@ -197,8 +222,15 @@ class Simulate{
         continue;
       }
 
+
       if(line_flag===0){
-        state = this.operations(index_set, id_set, state);
+        if(measure_set.length>0){
+          let tmp = this.measure_operations(index_set, id_set, measure_set, state);
+          state = tmp[0];
+          measure_List.push(tmp[1]);
+        }else{
+          state = this.operations(index_set, id_set, state);
+        }
       }else{
         state = this.some_operations(index_set, id_set, controll_set, state);
       }
@@ -207,8 +239,14 @@ class Simulate{
     }
     console.log("final state : "+JSON.stringify(state));
 
-    //show_results();
+    if(measure_List.length===0){
+      let measure_set = [];
+      for(let i=0; i<N; ++i) measure_set.push(i);
+      let tmp = this.measure_operations([], [], measure_set, state);
+      measure_List.push(tmp[1]);
+    }
 
-    return state;
+    //show_results();
+    return [state, measure_List];
   };
 };

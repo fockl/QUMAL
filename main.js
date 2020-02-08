@@ -5,9 +5,8 @@
   var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = [
-    ["I", "X", "Z", "H", "S", "Sd", "T", "Td"],
+    ["I", "Measure", "X", "Z", "H", "S", "Sd", "T", "Td"],
     ["CI", "SCI", "CX", "CZ", "CH", "CS", "CSd", "CT", "CTd"],
-    ["I", "Measure"]
   ];
 
   let Sim = new Simulate();
@@ -146,10 +145,10 @@
     document.body.appendChild(canvas);
   }
 
-  function index_converter_to_string(index, show_elements){
+  function index_converter_to_string(index, show_elements_length){
     var str="";
     var index_copy = index;
-    for(var i=0; i<show_elements.length; i++){
+    for(var i=0; i<show_elements_length; i++){
       str = String(index_copy%2) + str;
       index_copy=Math.floor(index_copy/2);
     }
@@ -172,14 +171,15 @@
     document.body.appendChild(canvas);
   }
 
-  function make_result(index, pos, val, show_elements){
+  function make_result(index, pos, val, show_elements_length){
     //var width = (N+2)*25; canvasの幅を動的に変更しようとしてできなかった
     var width = 100;
     make_result_bar(index, pos, val, width);
-    var index_string = index_converter_to_string(index, show_elements);
+    var index_string = index_converter_to_string(index, show_elements_length);
     make_result_index(index, pos, index_string, width);
   }
 
+  /*
   function calc_index(i, measure_indices){
     var ans = 0;
     for(var j=0; j<measure_indices.length; j++){
@@ -193,12 +193,14 @@
     console.log(ans);
     return ans;
   }
+  */
 
-  function show_results(){
+  function show_results(measure_List){
     delete_results();
     make_result_left_top();
     var state_all = [];
     //var measure_indices = [1];
+    /*
     var measure_indices = [];
     for(let i=0; i<N; ++i) measure_indices.push(i);
     console.log("show_results")
@@ -213,6 +215,8 @@
       }
       List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
     }
+    */
+    let List = measure_List[measure_List.length-1];
     List.forEach((value, key)=>{
       state_all.push([key, value]);
     });
@@ -221,8 +225,12 @@
     }else{
       state_all.sort(function(a, b){return a[0]-b[0]});
     }
+    let measure_indices_length = 0;
+    for(let i=0; (1<<i)<state_all.length; ++i){
+      measure_indices_length++;
+    }
     for(var i=0; i<state_all.length; i++){
-      make_result(state_all[i][0], i, state_all[i][1], measure_indices);
+      make_result(state_all[i][0], i, state_all[i][1], measure_indices_length);
     }
     make_button("sort_show", 25, 100*(N+5));
     document.querySelector('.sort_show').addEventListener('click', () => {
@@ -270,8 +278,10 @@
     make_button("simulate", 425, 25);
     document.querySelector('.simulate').addEventListener('click', () => {
       sort_show_flag = false;
-      state = Sim.simulate(W,N,num_of_state);
-      show_results();
+      let results = Sim.simulate(W,N,num_of_state);
+      state = results[0];
+      measure_List = results[1];
+      show_results(measure_List);
       scroll();
     })
     check_switch();
@@ -295,7 +305,7 @@
     if(iIdy>0){
       this.line_flag = document.getElementById("c"+iIdx+"-"+0).object.line_flag;
     }
-    // line_flag = 0 (nothing) 1 (controll) 2 (measure)// 3 (for start) 4 (for end)
+    // line_flag = 0 (nothing) 1 (controll) // 2 (for start) 3 (for end)
     /*
     if(iIdy>0){
       this.controll_flag = document.getElementById("c"+iIdx+"-"+0).object.controll_flag;
@@ -322,8 +332,8 @@
           console.log("c"+self.mIdx+"-"+y+" is selected ");
           if(another_canvas.object.line_flag===0){
             another_canvas.object.line_flag = 1;
-            if(another_canvas.object.Operator_id>0){
-              another_canvas.object.Operator_id+=1;
+            if(another_canvas.object.Operator_id==1){
+              another_canvas.object.Operator_id=0;
             }
           }
           draw_operator_text(another_canvas);
@@ -334,8 +344,8 @@
             var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
             if(another_canvas.object.line_flag===1){
               another_canvas.object.line_flag=0;
-              if(another_canvas.object.Operator_id>0){
-                another_canvas.object.Operator_id-=1;
+              if(another_canvas.object.Operator_id==1){
+                another_canvas.object.Operator_id=0;
               }
             }
             draw_operator_text(another_canvas);
