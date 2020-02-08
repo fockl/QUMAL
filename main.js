@@ -5,8 +5,9 @@
   var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = [
-    ["I", "Measure", "X", "Z", "H", "S", "Sd", "T", "Td"],
-    ["CI", "SCI", "CX", "CZ", "CH", "CS", "CSd", "CT", "CTd"],
+    ["I", "Measure", "X", "Z", "H", "S", "Sd", "T", "Td", "Rx", "Ry", "Rz"],
+    ["CI", "SCI", "CX", "CZ", "CH", "CS", "CSd", "CT", "CTd", "CRx", "CRy", "CRz"],
+    ["I", "Fs", "Fe"]
   ];
 
   let Sim = new Simulate();
@@ -75,6 +76,7 @@
       img.src = "./Figures/" + Operator_name[id] + ".png";
     }
     */
+    console.log(flag, id);
     img.src = "./Figures/" + Operator_name[flag][id] + ".png";
     ctx.clearRect(0, 0, width, height);
     img.onload = function(){
@@ -100,6 +102,7 @@
     console.log("x:"+x+",y:"+y);
     var canvas = document.getElementById("c"+x+"-"+y);
     canvas.remove();
+    delete_input_theta(x,y);
   }
 
   function check_switch(){
@@ -309,6 +312,60 @@
     }
   }
 
+  function make_input_theta(iIdx,iIdy,canvas){
+    let input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("name", "input");
+    input.setAttribute("class", "theta");
+    input.setAttribute("id", "theta-"+iIdx+"-"+iIdy);
+    input.setAttribute("value", "0");
+
+    input.style.width = 50 + "px";
+    input.style.height = 10 + "px";
+    input.style.position = "absolute";
+    input.style.left = 100*(iIdx+1) + X_SHIFT + 25 + "px";
+    input.style.top = 100*(iIdy+1) + Y_SHIFT + 80 + "px";
+
+    input.addEventListener('keyup', () => {
+      canvas.object.theta = input.value;
+    })
+
+    document.body.appendChild(input);
+  }
+
+  function delete_input_theta(iIdx,iIdy){
+    let canvas = document.getElementById("theta-"+iIdx+"-"+iIdy);
+    if(canvas!=null) canvas.remove();
+  }
+
+  function make_input_fornum(iIdx){
+    let input = document.createElement("input");
+    input.setAttribute("type", "text");
+    input.setAttribute("name", "input");
+    input.setAttribute("class", "fornum");
+    input.setAttribute("id", "fornum-"+iIdx);
+    input.setAttribute("value", "0");
+
+    input.style.width = 50 + "px";
+    input.style.height = 10 + "px";
+    input.style.position = "absolute";
+    input.style.left = 100*(iIdx+1) + X_SHIFT + 25 + "px";
+    input.style.top = Y_SHIFT + 80 + "px";
+
+    input.addEventListener('keyup', () => {
+      let ob = document.getElementById("c"+iIdx+"-0").object;
+      console.log("input.value = " + input.value);
+      ob.for_num = input.value;
+      console.log("c"+iIdx+"-0", ob.for_num);
+    })
+
+    document.body.appendChild(input);
+  }
+
+  function delete_input_fornum(iIdx){
+    let canvas = document.getElementById("fornum-"+iIdx);
+    if(canvas!=null) canvas.remove();
+  }
  
   function Operator_Cell(iIdx,iIdy){
     var self = this;
@@ -316,8 +373,14 @@
     this.mIdy = iIdy;
     this.Operator_id = 0;
     this.line_flag = 0;
+    this.theta = 0.0;
+    this.for_num = 0;
+    this.for_count = 0;
     if(iIdy>0){
       this.line_flag = document.getElementById("c"+iIdx+"-"+0).object.line_flag;
+      if(this.line_flag===2){
+        this.Operator_id = document.getElementById("c"+iIdx+"-"+0).object.Operator_id;
+      }
     }
     // line_flag = 0 (nothing) 1 (controll) // 2 (for start) 3 (for end)
     /*
@@ -332,31 +395,68 @@
 
     this.Click = function(e){
       console.log(""+self.mIdx+"-"+self.mIdy+" is clicked ");
-      console.log("line_flag = " + self.line_flag);
-      var input = document.getElementById("controll");
+      let controll_button = document.getElementById("controll");
+      let for_button = document.getElementById("for");
 
-      if(input.checked){
+      if(for_button.checked){
+        if(self.line_flag===2){
+          self.Operator_id += 1;
+          self.Operator_id %= Operator_name[self.line_flag].length;
+          for(let y=0; y<N; ++y){
+            let another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
+            another_canvas.object.Operator_id = self.Operator_id;
+            draw_operator_text(another_canvas);
+          }
+          if(self.Operator_id===2) make_input_fornum(self.mIdx);
+          else delete_input_fornum(self.mIdx);
+        }else{
+          for(let y=0; y<N; ++y){
+            let another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
+            console.log("c"+self.mIdx+"-"+y+" is selected ");
+            if(another_canvas.object.line_flag!==2){
+              another_canvas.object.line_flag = 2;
+              another_canvas.object.Operator_id = 0;
+            }
+            delete_input_theta(self.mIdx,y);
+            draw_operator_text(another_canvas);
+          }
+        }
+      }else if(controll_button.checked){
         if(self.line_flag===1){
           self.Operator_id += 1;
           self.Operator_id %= Operator_name[self.line_flag].length;
-        }
-        for(var y=0; y<N; y++){
-          var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-          //another_canvas.object.controll_flag = true;
-          console.log("c"+self.mIdx+"-"+y+" is selected ");
-          if(another_canvas.object.line_flag===0){
-            another_canvas.object.line_flag = 1;
-            if(another_canvas.object.Operator_id==1){
-              another_canvas.object.Operator_id=0;
-            }
+          delete_input_theta(self.mIdx,self.mIdy);
+          if(self.Operator_id-1 >= 8 && self.Operator_id-1 <= 10){
+            make_input_theta(self.mIdx,self.mIdy,this);
           }
-          draw_operator_text(another_canvas);
-        }
-      }else{
-        if(self.line_flag===1){
+          draw_operator_text(self.mCanvas);
+        }else{
           for(var y=0; y<N; y++){
             var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            if(another_canvas.object.line_flag===1){
+            //another_canvas.object.controll_flag = true;
+            console.log("c"+self.mIdx+"-"+y+" is selected ");
+            if(another_canvas.object.line_flag!==1){
+              if(another_canvas.object.line_flag===2){
+                delete_input_fornum(self.mIdx);
+                another_canvas.object.Operator_id=0;
+              }
+              another_canvas.object.line_flag = 1;
+              if(another_canvas.object.Operator_id==1){
+                another_canvas.object.Operator_id=0;
+              }
+            }
+            draw_operator_text(another_canvas);
+          }
+        }
+      }else{
+        if(self.line_flag!==0){
+          for(var y=0; y<N; y++){
+            var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
+            if(another_canvas.object.line_flag!==0){
+              if(another_canvas.object.line_flag===2){
+                delete_input_fornum(self.mIdx);
+                another_canvas.object.Operator_id=0;
+              }
               another_canvas.object.line_flag=0;
               if(another_canvas.object.Operator_id==1){
                 another_canvas.object.Operator_id=0;
@@ -367,6 +467,10 @@
         }else{
           self.Operator_id += 1;
           self.Operator_id %= Operator_name[self.line_flag].length;
+          delete_input_theta(self.mIdx,self.mIdy);
+          if(self.Operator_id-1 >= 8 && self.Operator_id-1 <= 10){
+            make_input_theta(self.mIdx,self.mIdy,this);
+          }
           draw_operator_text(self.mCanvas);
         }
       }

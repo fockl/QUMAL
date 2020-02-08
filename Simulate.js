@@ -56,23 +56,32 @@ const Operators = [
   ]
 ];
 
-  /*
-   * Rx(theta) = [
-   *   [Complex(Math.cos(theta/2, 0.0)), Complex(0.0, -Math.sin(theta/2))],
-   *   [-Complex(0.0, Math.sin(theta/2)), Complex(Math.cos(theta/2), 0.0)]
-   * ]
-   *
-   * Ry(theta) = [
-   *   [Complex(Math.cos(theta/2, 0.0)), Complex(-Math.sin(theta/2), 0.0)],
-   *   [Complex(-Math.sin(theta/2, 0.0)), Complex(Math.cos(theta/2), 0.0)]
-   * ]
-   *
-   * Rz(theta) = [
-   *   [Complex(1.0, 0.0), Complex(0.0, 0.0)],
-   *   [Complex(0.0, 0.0), Complex(Math.cos(theta), Math.sin(theta))]
-   * ]
-   *
-  */
+function Rx(theta){
+  let c = Math.cos(theta/2);
+  let s = Math.sin(theta/2);
+   return [
+     [Complex(c, 0.0), Complex(0.0, -s)],
+     [Complex(0.0, -s), Complex(c, 0.0)]
+   ];
+}
+
+function Ry(theta){
+  let c = Math.cos(theta/2);
+  let s = Math.sin(theta/2);
+  return [
+    [Complex(c, 0.0), Complex(-s, 0.0)],
+    [Complex(s, 0.0), Complex(c, 0.0)]
+  ];
+}
+
+function Rz(theta){
+  let c = Math.cos(theta/2);
+  let s = Math.sin(theta/2);
+  return [
+    [Complex(c, -s), Complex(0.0, 0.0)],
+    [Complex(0.0, 0.0), Complex(c, s)]
+  ];
+}
 
 const Operator0 = [
   [Complex(1.0, 0.0), Complex(0.0, 0.0)],
@@ -120,9 +129,10 @@ class Simulate{
     return state_copy;
   }
 
-  operations(index_set, id_set, state){
-    for(let i=0; i<id_set.length; i++){
-      let state_copy = this.one_operation(index_set[i], Operators[id_set[i]], state);
+  operations(index_set, operator_set, state){
+    for(let i=0; i<operator_set.length; i++){
+      let operator = [];
+      let state_copy = this.one_operation(index_set[i], operator_set[i], state);
       for(let j=0; j<this.num_of_state; j++){
         state[j] = state_copy[j];
       }
@@ -141,9 +151,9 @@ class Simulate{
   }
 
 
-  measure_operations(index_set, id_set, measure_set, state){
+  measure_operations(index_set, operator_set, measure_set, state){
     let state_copy = [];
-    state_copy = this.operations(index_set, id_set, state);
+    state_copy = this.operations(index_set, operator_set, state);
     let List = new Map();
     for(let i=0; i<this.num_of_state; ++i){
       let index = this.__calc_index(i, measure_set);
@@ -154,7 +164,7 @@ class Simulate{
     return [state_copy, List];
   }
 
-  some_operations(index_set, id_set, controll_set, state){
+  some_operations(index_set, operator_set, controll_set, state){
     let state_copy1 = [];
     let state_copy2 = [];
     let state_copy = []
@@ -167,12 +177,12 @@ class Simulate{
       let last_index = controll_set.pop();
       state_copy1 = this.one_operation(last_index, Operator0, state);
       state_copy2 = this.one_operation(last_index, Operator1, state);
-      state_copy2 = this.some_operations(index_set, id_set, controll_set, state_copy2);
+      state_copy2 = this.some_operations(index_set, operator_set, controll_set, state_copy2);
       for(let i=0; i<this.num_of_state; i++){
         state_copy[i] = Complex_plus(state_copy1[i], state_copy2[i]);
       }
     }else{
-      state_copy = this.operations(index_set, id_set, state);
+      state_copy = this.operations(index_set, operator_set, state);
     }
     return state_copy;
   }
@@ -194,18 +204,63 @@ class Simulate{
 
     let measure_List = [];
 
-    for(let x=0; x<this.W; x++){
+    let pos = -1;
+
+    let Fs_list = [];
+
+    while(pos+1<this.W){
+      pos++;
+      console.log("pos = " + pos);
       let index_set = [];
-      let id_set = [];
+      //let id_set = [];
+      let operator_set = [];
       let controll_set = []
       let measure_set = []
       //let controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
-      let line_flag = document.getElementById("c"+x+"-0").object.line_flag;
+      let line_flag = document.getElementById("c"+pos+"-0").object.line_flag;
+      if(line_flag===2){
+        let ob = document.getElementById("c"+pos+"-0").object;
+        let ob_id = ob.Operator_id;
+        let for_num = 0;
+        if(!isNaN(ob.for_num)){
+          console.log("c"+pos+"-0");
+          console.log("for_num : " + for_num);
+          for_num = Number(ob.for_num);
+        }
+        let for_count = ob.for_count;
+        console.log(for_count, for_num, ob_id);
+        if(ob_id===1){
+          Fs_list.push(pos);
+        }else if(ob_id===2){
+          if(for_count>=for_num){
+            ob.for_count = 0;
+            Fs_list.pop();
+          }else{
+            ob.for_count++;
+            pos = Fs_list[Fs_list.length-1];
+          }
+        }
+        continue;
+      }
       for(let y=0; y<this.N; y++){
-        let canvas = document.getElementById("c"+x+"-"+y);
-        if(canvas.object.Operator_id!=0){
+        let canvas = document.getElementById("c"+pos+"-"+y);
+        let id = canvas.object.Operator_id;
+        let theta = 0.0;
+        if(!isNaN(canvas.object.theta)) theta = Number(canvas.object.theta)*Math.PI/180.0;
+        console.log("theta = ", pos, y, theta, canvas.object.theta);
+        if(id!=0){
           index_set.push(y);
-          id_set.push(canvas.object.Operator_id-1);
+          //id_set.push(canvas.object.Operator_id-1);
+          if(id-1<8){
+            operator_set.push(Operators[id-1]);
+          }else if(id-1==8){
+            console.log(Rx(theta));
+            operator_set.push(Rx(theta));
+          }else if(id-1==9){
+            operator_set.push(Ry(theta));
+          }else if(id-1==10){
+            operator_set.push(Rz(theta));
+          }
         }
         if(canvas.object.Operator_id===1){
           if(line_flag===0){
@@ -216,23 +271,23 @@ class Simulate{
         }
       }
 
-      console.log(index_set, JSON.stringify(id_set));
+      console.log(index_set, JSON.stringify(operator_set));
 
-      if(id_set.length==0){
+      if(operator_set.length==0){
         continue;
       }
 
 
       if(line_flag===0){
         if(measure_set.length>0){
-          let tmp = this.measure_operations(index_set, id_set, measure_set, state);
+          let tmp = this.measure_operations(index_set, operator_set, measure_set, state);
           state = tmp[0];
           measure_List.push(tmp[1]);
         }else{
-          state = this.operations(index_set, id_set, state);
+          state = this.operations(index_set, operator_set, state);
         }
       }else{
-        state = this.some_operations(index_set, id_set, controll_set, state);
+        state = this.some_operations(index_set, operator_set, controll_set, state);
       }
 
       console.log("middle state : "+JSON.stringify(state));

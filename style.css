@@ -31,10 +31,10 @@ canvas{
 
 .controllArea{
   position: absolute;
-  top: 75px;
-  left: 525px;
   width: 120px;
   height: 50px;
+  top: 25px;
+  left: 525px;
 }
 .controllArea input[type="checkbox"]{
   display: none;
@@ -53,7 +53,14 @@ canvas{
   box-shadow: 3px 3px 6px #888;
   transition: .3s;
 }
-.controllArea label span:after{
+.controllArea #controll{
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  top: 75px;
+  left: 525px;
+}
+.controllArea #controll + label span:after{
   content: "Controll OFF";
   color: #aaa;
 }
@@ -63,6 +70,25 @@ canvas{
 }
 .controllArea #controll:checked + label span:after{
   content: "Controll ON";
+  color: #fff;
+}
+.controllArea #for{
+  position: absolute;
+  width: 120px;
+  height: 50px;
+  top: 75px;
+  left: 625px;
+}
+.controllArea #for + label span:after{
+  content: "For OFF";
+  color: #aaa;
+}
+.controllArea #for:checked + label{
+  background: #78bd78;
+  box-shadow: none;
+}
+.controllArea #for:checked + label span:after{
+  content: "For ON";
   color: #fff;
 }
 
