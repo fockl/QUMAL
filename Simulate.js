@@ -218,11 +218,11 @@ class Simulate{
       let line_flag = document.getElementById("c"+pos+"-0").object.line_flag;
       if(line_flag===2){
         let ob = document.getElementById("c"+pos+"-0").object;
+        let ob_input = document.getElementById("fornum-"+pos);
+        if(ob_input!==null) ob.for_num = ob_input.value;
         let ob_id = ob.Operator_id;
         let for_num = 0;
         if(!isNaN(ob.for_num)){
-          console.log("c"+pos+"-0");
-          console.log("for_num : " + for_num);
           for_num = Number(ob.for_num);
         }
         let for_count = ob.for_count;
@@ -244,6 +244,8 @@ class Simulate{
         let canvas = document.getElementById("c"+pos+"-"+y);
         let id = canvas.object.Operator_id;
         let theta = 0.0;
+        let ob_input = document.getElementById("theta-"+pos+"-"+y);
+        if(ob_input!==null) canvas.object.theta = ob_input.value;
         if(!isNaN(canvas.object.theta)) theta = Number(canvas.object.theta)*Math.PI/180.0;
         console.log("theta = ", pos, y, theta, canvas.object.theta);
         if(id!=0){
@@ -251,7 +253,6 @@ class Simulate{
           if(id-1<8){
             operator_set.push(Operators[id-1]);
           }else if(id-1==8){
-            console.log(Rx(theta));
             operator_set.push(Rx(theta));
           }else if(id-1==9){
             operator_set.push(Ry(theta));

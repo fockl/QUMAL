@@ -88,14 +88,16 @@
   }
 
   function delete_operator(x, y){
-    console.log("x:"+x+",y:"+y);
+    console.log("delete x:"+x+",y:"+y);
     var canvas = document.getElementById("c"+x+"-"+y);
     canvas.remove();
     delete_input_theta(x,y);
   }
 
   function check_switch(){
-    var checkbox = document.getElementById("controll");
+    let checkbox = document.getElementById("controll");
+    checkbox.checked = false;
+    checkbox = document.getElementById("for_check");
     checkbox.checked = false;
   }
 
@@ -201,34 +203,6 @@
         draw_point_on_canvas((j+0.5)/measure_List.length, value);
       })
     }
-
-    /*
-    for(let j=0; j<measure_List.length; ++j){
-      let state_all = [];
-      make_result_left_top(j);
-      let List = measure_List[j];
-      List.forEach((value, key)=>{
-        state_all.push([key, value]);
-      });
-      if(sort_show_flag){
-        state_all.sort(function(a, b){return b[1]-a[1]});
-      }else{
-        state_all.sort(function(a, b){return a[0]-b[0]});
-      }
-      let measure_indices_length = 0;
-      for(let i=0; (1<<i)<state_all.length; ++i){
-        measure_indices_length++;
-      }
-      for(var i=0; i<state_all.length; i++){
-        make_result(state_all[i][0], i, state_all[i][1], measure_indices_length, j);
-      }
-      make_button("sort_show", 20, 100*(N+4)+300*j+10, "sort_show"+j);
-      document.querySelector('#sort_show'+j).addEventListener('click', () => {
-        sort_show_flag = !sort_show_flag;
-        show_results(measure_List);
-      })
-    }
-    */
   }
 
   function init(){
@@ -329,9 +303,7 @@
 
     input.addEventListener('keyup', () => {
       let ob = document.getElementById("c"+iIdx+"-0").object;
-      console.log("input.value = " + input.value);
       ob.for_num = input.value;
-      console.log("c"+iIdx+"-0", ob.for_num);
     })
 
     document.body.appendChild(input);
@@ -363,7 +335,7 @@
     this.Click = function(e){
       console.log(""+self.mIdx+"-"+self.mIdy+" is clicked ");
       let controll_button = document.getElementById("controll");
-      let for_button = document.getElementById("for");
+      let for_button = document.getElementById("for_check");
 
       self.theta = 0.0;
 
@@ -381,7 +353,6 @@
         }else{
           for(let y=0; y<N; ++y){
             let another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            console.log("c"+self.mIdx+"-"+y+" is selected ");
             if(another_canvas.object.line_flag!==2){
               another_canvas.object.line_flag = 2;
               another_canvas.object.Operator_id = 0;
@@ -402,7 +373,6 @@
         }else{
           for(var y=0; y<N; y++){
             var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            console.log("c"+self.mIdx+"-"+y+" is selected ");
             if(another_canvas.object.line_flag!==1){
               if(another_canvas.object.line_flag===2){
                 delete_input_fornum(self.mIdx);
