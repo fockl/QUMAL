@@ -65,17 +65,6 @@
     var img = new Image();
     var id = canvas.object.Operator_id;
     var flag = canvas.object.line_flag;
-    /*
-    if(canvas.object.controll_flag){
-      if(canvas.object.see_flag){
-        img.src = "./Figures/SC" + Operator_name[id] + ".png";
-      }else{
-        img.src = "./Figures/C" + Operator_name[id] + ".png";
-      }
-    }else{
-      img.src = "./Figures/" + Operator_name[id] + ".png";
-    }
-    */
     console.log(flag, id);
     img.src = "./Figures/" + Operator_name[flag][id] + ".png";
     ctx.clearRect(0, 0, width, height);
@@ -99,14 +88,16 @@
   }
 
   function delete_operator(x, y){
-    console.log("x:"+x+",y:"+y);
+    console.log("delete x:"+x+",y:"+y);
     var canvas = document.getElementById("c"+x+"-"+y);
     canvas.remove();
     delete_input_theta(x,y);
   }
 
   function check_switch(){
-    var checkbox = document.getElementById("controll");
+    let checkbox = document.getElementById("controll");
+    checkbox.checked = false;
+    checkbox = document.getElementById("for_check");
     checkbox.checked = false;
   }
 
@@ -193,41 +184,8 @@
     make_result_index(index, pos, index_string, width, shift);
   }
 
-  /*
-  function calc_index(i, measure_indices){
-    var ans = 0;
-    for(var j=0; j<measure_indices.length; j++){
-      var tmp = 1<<(N-1-measure_indices[j]);
-      ans <<= 1;
-      if((tmp&i)!=0){
-        ans+=1;
-      }
-      console.log(i, tmp, tmp&i, ans);
-    }
-    console.log(ans);
-    return ans;
-  }
-  */
-
   function show_results(measure_List){
     delete_results();
-    //var measure_indices = [1];
-    /*
-    var measure_indices = [];
-    for(let i=0; i<N; ++i) measure_indices.push(i);
-    console.log("show_results")
-    var List = new Map();
-    for(var i=0; i<num_of_state; i++){
-      //console.log("i:" + i + ", val:" + Complex_abs(state[i])*Complex_abs(state[i]));
-      //state_all.push([i, Complex_abs(state[i])*Complex_abs(state[i])]);
-      var index = calc_index(i, measure_indices);
-      var value = 0;
-      if(List.has(index)){
-        value = List.get(index);
-      }
-      List.set(index, Complex_abs(state[i])*Complex_abs(state[i])+value);
-    }
-    */
 
     for(let j=0; j<measure_List.length; ++j){
       let state_all = [];
@@ -354,9 +312,7 @@
 
     input.addEventListener('keyup', () => {
       let ob = document.getElementById("c"+iIdx+"-0").object;
-      console.log("input.value = " + input.value);
       ob.for_num = input.value;
-      console.log("c"+iIdx+"-0", ob.for_num);
     })
 
     document.body.appendChild(input);
@@ -383,20 +339,12 @@
       }
     }
     // line_flag = 0 (nothing) 1 (controll) // 2 (for start) 3 (for end)
-    /*
-    if(iIdy>0){
-      this.controll_flag = document.getElementById("c"+iIdx+"-"+0).object.controll_flag;
-    }else{
-      this.controll_flag = false;
-    }
-    */
-    //this.see_flag = false;
     this.mCanvas = document.getElementById("c"+iIdx+"-"+iIdy);
 
     this.Click = function(e){
       console.log(""+self.mIdx+"-"+self.mIdy+" is clicked ");
       let controll_button = document.getElementById("controll");
-      let for_button = document.getElementById("for");
+      let for_button = document.getElementById("for_check");
 
       if(for_button.checked){
         if(self.line_flag===2){
@@ -412,7 +360,6 @@
         }else{
           for(let y=0; y<N; ++y){
             let another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            console.log("c"+self.mIdx+"-"+y+" is selected ");
             if(another_canvas.object.line_flag!==2){
               another_canvas.object.line_flag = 2;
               another_canvas.object.Operator_id = 0;
@@ -433,8 +380,6 @@
         }else{
           for(var y=0; y<N; y++){
             var another_canvas = document.getElementById("c"+self.mIdx+"-"+y);
-            //another_canvas.object.controll_flag = true;
-            console.log("c"+self.mIdx+"-"+y+" is selected ");
             if(another_canvas.object.line_flag!==1){
               if(another_canvas.object.line_flag===2){
                 delete_input_fornum(self.mIdx);

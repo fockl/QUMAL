@@ -72,22 +72,22 @@ canvas{
   content: "Controll ON";
   color: #fff;
 }
-.controllArea #for{
+.controllArea #for_check{
   position: absolute;
   width: 120px;
   height: 50px;
   top: 75px;
   left: 625px;
 }
-.controllArea #for + label span:after{
+.controllArea #for_check + label span:after{
   content: "For OFF";
   color: #aaa;
 }
-.controllArea #for:checked + label{
+.controllArea #for_check:checked + label{
   background: #78bd78;
   box-shadow: none;
 }
-.controllArea #for:checked + label span:after{
+.controllArea #for_check:checked + label span:after{
   content: "For ON";
   color: #fff;
 }
