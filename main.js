@@ -224,8 +224,15 @@
     make_button("wbutton2", 125, 25, "wbutton2");
     document.querySelector('.wbutton2').addEventListener('click', () => {
       W--;
-      if(W==0) W=1;
-      else for(let y=0; y<N; ++y) delete_operator(W,y);
+      if(W==0){
+        W=1;
+      }else{
+        for(let y=0; y<N; ++y){
+          delete_operator(W,y);
+          delete_input_theta(W,y);
+        }
+        delete_input_fornum(W);
+      }
     })
 
     make_button("nbutton1", 225, 25, "nbutton1");
@@ -246,7 +253,10 @@
       }else{
         num_of_state/=2;
         delete_zero(N);
-        for(let x=0; x<W; ++x) delete_operator(x,N);
+        for(let x=0; x<W; ++x){
+          delete_operator(x,N);
+          delete_input_theta(x,N);
+        }
       }
     })
 
