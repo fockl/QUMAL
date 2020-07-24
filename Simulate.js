@@ -22,34 +22,47 @@ function Complex_abs(c){
 const sqrt2 = Math.sqrt(2);
 
 const Operators = [
+  //I
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(1.0, 0.0)]
   ],
+  //X
   [
     [Complex(0.0, 0.0), Complex(1.0, 0.0)],
     [Complex(1.0, 0.0), Complex(0.0, 0.0)]
   ],
+  //Y
+  [
+    [Complex(0.0, 0.0), Complex(0.0, -1.0)],
+    [Complex(0.0, 1.0), Complex(0.0, 0.0)]
+  ],
+  //Z
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(-1.0, 0.0)]
   ],
+  //H
   [
     [Complex(1/sqrt2, 0.0), Complex(1/sqrt2, 0.0)],
     [Complex(1/sqrt2, 0.0), Complex(-1/sqrt2, 0.0)]
   ],
+  //S
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(0.0, 1.0)]
   ],
+  //S^dagger
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(0.0, -1.0)]
   ],
+  //T
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(1/sqrt2, 1/sqrt2)]
   ],
+  //T^dagger
   [
     [Complex(1.0, 0.0), Complex(0.0, 0.0)],
     [Complex(0.0, 0.0), Complex(1/sqrt2, -1/sqrt2)]

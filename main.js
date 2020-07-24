@@ -5,8 +5,8 @@
   var sort_show_flag = false;
   var num_of_state = 4;
   const Operator_name = [
-    ["I", "Measure", "X", "Z", "H", "S", "Sd", "T", "Td", "Rx", "Ry", "Rz"],
-    ["CI", "SCI", "CX", "CZ", "CH", "CS", "CSd", "CT", "CTd", "CRx", "CRy", "CRz"],
+    ["I", "Measure", "X", "Y", "Z", "H", "S", "Sd", "T", "Td", "Rx", "Ry", "Rz"],
+    ["CI", "SCI", "CX", "CY", "CZ", "CH", "CS", "CSd", "CT", "CTd", "CRx", "CRy", "CRz"],
     ["I", "Fs", "Fe"]
   ];
 
@@ -383,7 +383,7 @@
           self.Operator_id += 1;
           self.Operator_id %= Operator_name[self.line_flag].length;
           delete_input_theta(self.mIdx,self.mIdy);
-          if(self.Operator_id-1 >= 8 && self.Operator_id-1 <= 10){
+          if(self.Operator_id-1 >= 9 && self.Operator_id-1 <= 11){
             make_input_theta(self.mIdx,self.mIdy,this);
           }
           draw_operator_text(self.mCanvas);
@@ -423,7 +423,7 @@
           self.Operator_id += 1;
           self.Operator_id %= Operator_name[self.line_flag].length;
           delete_input_theta(self.mIdx,self.mIdy);
-          if(self.Operator_id-1 >= 8 && self.Operator_id-1 <= 10){
+          if(self.Operator_id-1 >= 9 && self.Operator_id-1 <= 11){
             make_input_theta(self.mIdx,self.mIdy,this);
           }
           draw_operator_text(self.mCanvas);
