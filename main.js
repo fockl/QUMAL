@@ -110,27 +110,19 @@
     for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
     canvases = document.querySelectorAll(".sort_show");
     for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
-    canvases = document.querySelectorAll(".result-canvas");
-    for(let i=0; i<canvases.length; ++i) if(canvases[i]!=null) canvases[i].remove();
-  }
 
-  function make_result_canvas(){
-    let canvas = document.createElement("canvas");
-    canvas.setAttribute("class", "result-canvas");
-    canvas.setAttribute("id", "result-canvas");
-    canvas.style.position = "absolute";
-    canvas.style.left = 50 + X_SHIFT + "px";
-    canvas.style.top = 100*(N+2) + Y_SHIFT + "px";
-    document.body.appendChild(canvas);
-  }
-
-  function draw_point_on_canvas(x, val){
-    let canvas = document.getElementById("result-canvas");
-    let ctx = canvas.getContext('2d');
-    let width = canvas.width;
-    let height = canvas.height;
-    ctx.fillStyle = 'blue';
-    ctx.fillRect(x*width, height*(1-val), 2, 2);
+    /*
+    var canvas = document.getElementById("result_left_top");
+    if(canvas!=null) canvas.remove();
+    for(var i=0; i<num_of_state; i++){
+      canvas = document.getElementById("result-bar-"+i);
+      if(canvas!=null) canvas.remove();
+      canvas = document.getElementById("result-index-"+i);
+      if(canvas!=null) canvas.remove();
+    }
+    var button = document.getElementById("sort_show");
+    if(button!=null) button.remove();
+    */
   }
 
   function make_result_left_top(shift){
@@ -195,12 +187,29 @@
   function show_results(measure_List){
     delete_results();
 
-    make_result_canvas();
-
     for(let j=0; j<measure_List.length; ++j){
+      let state_all = [];
+      make_result_left_top(j);
       let List = measure_List[j];
-      List.forEach((value, key) => {
-        draw_point_on_canvas((j+0.5)/measure_List.length, value);
+      List.forEach((value, key)=>{
+        state_all.push([key, value]);
+      });
+      if(sort_show_flag){
+        state_all.sort(function(a, b){return b[1]-a[1]});
+      }else{
+        state_all.sort(function(a, b){return a[0]-b[0]});
+      }
+      let measure_indices_length = 0;
+      for(let i=0; (1<<i)<state_all.length; ++i){
+        measure_indices_length++;
+      }
+      for(var i=0; i<state_all.length; i++){
+        make_result(state_all[i][0], i, state_all[i][1], measure_indices_length, j);
+      }
+      make_button("sort_show", 20, 100*(N+4)+300*j+10, "sort_show"+j);
+      document.querySelector('#sort_show'+j).addEventListener('click', () => {
+        sort_show_flag = !sort_show_flag;
+        show_results(measure_List);
       })
     }
   }
@@ -339,15 +348,13 @@
         this.Operator_id = document.getElementById("c"+iIdx+"-"+0).object.Operator_id;
       }
     }
-    // line_flag = 0 (nothing) 1 (controll) 2 (for)
+    // line_flag = 0 (nothing) 1 (controll) // 2 (for start) 3 (for end)
     this.mCanvas = document.getElementById("c"+iIdx+"-"+iIdy);
 
     this.Click = function(e){
       console.log(""+self.mIdx+"-"+self.mIdy+" is clicked ");
       let controll_button = document.getElementById("controll");
       let for_button = document.getElementById("for_check");
-
-      self.theta = 0.0;
 
       if(for_button.checked){
         if(self.line_flag===2){

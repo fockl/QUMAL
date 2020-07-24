@@ -212,9 +212,11 @@ class Simulate{
       pos++;
       console.log("pos = " + pos);
       let index_set = [];
+      //let id_set = [];
       let operator_set = [];
       let controll_set = []
       let measure_set = []
+      //let controll_flag = document.getElementById("c"+x+"-0").object.controll_flag;
       let line_flag = document.getElementById("c"+pos+"-0").object.line_flag;
       if(line_flag===2){
         let ob = document.getElementById("c"+pos+"-0").object;
@@ -250,6 +252,7 @@ class Simulate{
         console.log("theta = ", pos, y, theta, canvas.object.theta);
         if(id!=0){
           index_set.push(y);
+          //id_set.push(canvas.object.Operator_id-1);
           if(id-1<8){
             operator_set.push(Operators[id-1]);
           }else if(id-1==8){
@@ -299,6 +302,7 @@ class Simulate{
       measure_List.push(tmp[1]);
     }
 
+    //show_results();
     return [state, measure_List];
   };
 };
