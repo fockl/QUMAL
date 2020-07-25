@@ -12,12 +12,17 @@ i[![Maintainability](https://api.codeclimate.com/v1/badges/0a3f4bb5588013153037/
 
 Quantum Algorithm Simulator
 
+![result](https://user-images.githubusercontent.com/12505784/88458758-47697d00-cecb-11ea-8517-0e0a8535c5ac.gif)
+
 # Table of Contents
 
 - [Installation](#Installation)
 - [Usage](#Usage)
 - [License](#Lisence)
 - [Link](#Link)
+
+
+## Installation
 
 
 The only thing you have to do to use MOCA is the following 3 step:
