@@ -266,13 +266,13 @@ class Simulate{
         if(id!=0){
           index_set.push(y);
           //id_set.push(canvas.object.Operator_id-1);
-          if(id-1<8){
+          if(id-1<Operators.length){
             operator_set.push(Operators[id-1]);
-          }else if(id-1==8){
+          }else if(id-1==Operators.length){
             operator_set.push(Rx(theta));
-          }else if(id-1==9){
+          }else if(id-1==Operators.length+1){
             operator_set.push(Ry(theta));
-          }else if(id-1==10){
+          }else if(id-1==Operators.length+2){
             operator_set.push(Rz(theta));
           }
         }
@@ -291,7 +291,6 @@ class Simulate{
         continue;
       }
 
-
       if(line_flag===0){
         if(measure_set.length>0){
           let tmp = this.measure_operations(index_set, operator_set, measure_set, state);
@@ -307,13 +306,6 @@ class Simulate{
       console.log("middle state : "+JSON.stringify(state));
     }
     console.log("final state : "+JSON.stringify(state));
-
-    if(measure_List.length===0){
-      let measure_set = [];
-      for(let i=0; i<N; ++i) measure_set.push(i);
-      let tmp = this.measure_operations([], [], measure_set, state);
-      measure_List.push(tmp[1]);
-    }
 
     //show_results();
     return [state, measure_List];

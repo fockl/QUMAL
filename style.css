@@ -1,3 +1,75 @@
+.langChangeButton{
+  display: none;
+}
+.langChangeButton:checked + label{
+  background-color: skyblue;
+}
+label{
+  display: inline-block;
+  border: 1px solid #000;
+  padding: 2px 2px;
+  width: 55px;
+  height: 25px;
+  text-align: center;
+}
+#langJa:not(:checked) ~ * :lang(ja){
+  display: none;
+}
+#langEn:not(:checked) ~ * :lang(en){
+  display: none;
+}
+
+.controll-checkbox{
+  display: none;
+}
+.controll-label{
+  display: block;
+  width: 75px;
+  height: 25px;
+  box-sizing: border-box;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  background: #eee;
+  box-shadow: 3px 3px 6px #888;
+  transition: .3s;
+}
+.controll-label span:after{
+  color: #111;
+}
+.controll-checkbox:checked + .controll-label{
+  background-color: pink;
+  box-shadow:none;
+}
+.controll-checkbox:checked + .for-label span:after{
+  color: #fff;
+}
+.for-checkbox{
+  display: none;
+}
+.for-label{
+  display: block;
+  width: 75px;
+  height: 25px;
+  box-sizing: border-box;
+  text-align: center;
+  border: 2px solid #ccc;
+  border-radius: 3px;
+  background: #eee;
+  box-shadow: 3px 3px 6px #888;
+  transition: .3s;
+}
+.for-label span:after{
+  color: #aaa;
+}
+.for-checkbox:checked + .for-label{
+  background-color: pink;
+  box-shadow: none;
+}
+.for-checkbox:checked + .for-label span:after{
+  color: #fff;
+}
+
 canvas{
   width: 100px;
   height: 100px;
@@ -5,12 +77,6 @@ canvas{
 .operator:hover{
   background-color: lightgreen;
   border-color: lightgreen;
-}
-.zero{
-  width: 100px;
-  height: 100px;
-}
-.zero:hover{
 }
 .result-bar{
   border-style: solid;
@@ -22,136 +88,61 @@ canvas{
   border-color: black;
   height: 50px;
 }
-.result_left_top{
-  border-style: solid;
-  border-color: black;
-  width: 50px;
-  height: 200px;
-}
-
-.controllArea{
+.operator{
   position: absolute;
-  width: 120px;
-  height: 50px;
-  top: 25px;
-  left: 525px;
 }
-.controllArea input[type="checkbox"]{
-  display: none;
-}
-.controllArea label{
-  display: block;
-  box-sizing: border-box;
-  text-align: center;
-  border: 2px solid #ccc;
-  border-radius: 3px;
-  height: 50px;
-  font-size: 18px;
-  line-height: 50px;
-  font-weight: bold;
-  background: #eee;
-  box-shadow: 3px 3px 6px #888;
-  transition: .3s;
-}
-.controllArea #controll{
+.zero{
   position: absolute;
-  width: 120px;
-  height: 50px;
-  top: 75px;
-  left: 525px;
 }
-.controllArea #controll + label span:after{
-  content: "Controll OFF";
-  color: #aaa;
-}
-.controllArea #controll:checked + label{
-  background: #78bd78;
-  box-shadow: none;
-}
-.controllArea #controll:checked + label span:after{
-  content: "Controll ON";
-  color: #fff;
-}
-.controllArea #for_check{
+.result-bar{
   position: absolute;
-  width: 120px;
-  height: 50px;
-  top: 75px;
-  left: 625px;
 }
-.controllArea #for_check + label span:after{
-  content: "For OFF";
-  color: #aaa;
-}
-.controllArea #for_check:checked + label{
-  background: #78bd78;
-  box-shadow: none;
-}
-.controllArea #for_check:checked + label span:after{
-  content: "For ON";
-  color: #fff;
-}
-
-.how_to_use_jp{
+.result-index{
   position: absolute;
-  top: 25px;
-  left: 125px;
 }
 
 button{
-  display: inline-block;
+  /*display: inline-block;*/
+  display: flex;
+  justify-content: center;
+  align-items: center;
   padding: 0.5em 1em;
   text-decoration: none;
+  box-sizing: border-box;
   border-bottom: solid 4px #627295;
   border-radius: 3px;
   width: 75px;
   height: 50px;
   position: absolute;
-  font-size: 12px;
+  font-size: 14px;
 }
-.nbutton1{
-}
-.nbutton1:active{
+.default_button:active{
   -webkit-transform: translateY(4px);
   transform: translateY(4px);
   border-bottom: none;
 }
-.nbutton2{
+#wbutton1{
+  left: 25px;
+  top: 100px;
 }
-.nbutton2:active{
-  -webkit-transform: translateY(4px);
-  transform: translateY(4px);
-  border-bottom: none;
+#wbutton2{
+  left: 125px;
+  top: 100px;
 }
-.wbutton1{
+#nbutton1{
+  left: 225px;
+  top: 100px;
 }
-.wbutton1:active{
-  -webkit-transform: translateY(4px);
-  transform: translateY(4px);
-  border-bottom: none;
+#nbutton2{
+  left: 325px;
+  top: 100px;
 }
-.wbutton2{
-}
-.wbutton2:active{
-  -webkit-transform: translateY(4px);
-  transform: translateY(4px);
-  border-bottom: none;
-}
-.simulate{
+#simulate{
   background: #00ffff;
+  /*border-bottom: none;*/
+  left: 425px;
+  top: 100px;
   color: red;
-}
-.simulate:active{
-  -webkit-transform: translateY(4px);
-  transform: translateY(4px);
-  border-bottom: none;
-}
-.sort_show{
-}
-.sort_show{
-  -webkit-transform: translateY(4px);
-  transform: translateY(4px);
-  border-bottom: none;
 }
 
 a{
@@ -169,3 +160,10 @@ a:hover{
 a:active{
   color: #4ca4e8;
 }
+
+input{
+  width: 50px;
+  height: 10px;
+  position: absolute;
+}
+

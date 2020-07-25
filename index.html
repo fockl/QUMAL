@@ -1,35 +1,56 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-172764719-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-172764719-2');
+    </script>
+
     <title>Quantum Gate Simulator</title>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
-    <div class="controllArea" id="controllArea">
-      <input type="checkbox" id="controll" checked=false>
-      <label for="controll">
-        <span></span>
-      </label>
-      <input type="checkbox" id="for_check" checked=false>
-      <label for="for_check">
-        <span></span>
-      </label>
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false" data-text="Quantum Gate Simulator:QUMAL">Tweet</a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://github.com/fockl/QUMAL"><font size="+1">GitHub</font></a>
+
+    <div></div>
+
+    <input type="radio" class="langChangeButton" name="langChangeButton" id="langEn" checked>
+    <label for="langEn" style="cursor:pointer"><font size="+1">English</font></label>
+    <input type="radio" class="langChangeButton" name="langChangeButton" id="langJa">
+    <label for="langJa" style="cursor:pointer">日本語</label>
+
+    <div class="how_to_use" id="how_to_use">
+      <a href="./about/how_to_use_jp.html" position="absolute" top=25px left=625px lang="en"><font size="+1">How to use</font></a>
+      <a href="./about/how_to_use_jp.html" position="absolute" top=25px left=625px lang="ja">使い方</a>
     </div>
-    <div class="how_to_use_jp" id="how_to_use_jp">
-      <a href="./about/how_to_use_jp.html" position="absolute" top=25px left=625px>使い方</a>
-    </div>
-    <button class="wbutton1" id="wbutton1" type="button" style="cursor:pointer">
-      Add gate
+
+    <button class="default_button" id="wbutton1" type="button" style="cursor:pointer">
+      <p lang="en">Add gate</p>
+      <p lang="ja">ゲートを追加</p>
     </button>
-    <button class="wbutton2" id="wbutton2" type="button" style="cursor:pointer">
-      Delete gate
+    <button class="default_button" id="wbutton2" type="button" style="cursor:pointer">
+      <p lang="en">Delete gate</p>
+      <p lang="ja">ゲートを削除</p>
     </button>
-    <button class="nbutton1" id="nbutton1" type="button" style="cursor:pointer">
-      Add qubit
+    <button class="default_button" id="nbutton1" type="button" style="cursor:pointer">
+      <p lang="en">Add qubit</p>
+      <p lang="ja">qubitを追加</p>
     </button>
-    <button class="nbutton2" id="nbutton2" type="button" style="cursor:pointer">
-      Delete qubit
+    <button class="default_button" id="nbutton2" type="button" style="cursor:pointer">
+      <p lang="en">Delete qubit</p>
+      <p lang="ja">qubitを削除</p>
+    </button>
+    <button class="default_button" id="simulate" type="button" style="cursor:pointer">
+      <p lang="en">Simulate</p>
+      <p lang="ja">計算開始</p>
     </button>
     <script src="./Simulate.js"></script>
     <script src="./main.js"></script>
