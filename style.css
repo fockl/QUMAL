@@ -102,24 +102,25 @@ canvas{
 }
 
 button{
-  /*display: inline-block;*/
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: inline-block;
   padding: 0.5em 1em;
-  text-decoration: none;
   box-sizing: border-box;
   border-bottom: solid 4px #627295;
   border-radius: 3px;
   width: 75px;
   height: 50px;
   position: absolute;
+  text-align: center;
   font-size: 14px;
 }
 .default_button:active{
   -webkit-transform: translateY(4px);
   transform: translateY(4px);
   border-bottom: none;
+}
+.default_button p{
+  transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
 }
 #wbutton1{
   left: 25px;
@@ -139,7 +140,6 @@ button{
 }
 #simulate{
   background: #00ffff;
-  /*border-bottom: none;*/
   left: 425px;
   top: 100px;
   color: red;

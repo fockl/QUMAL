@@ -364,7 +364,7 @@
 
     canvas.style.position = "absolute";
     canvas.style.left = 100 + pos*width + X_SHIFT + "px";
-    canvas.style.top = 100*(N+2) + Y_SHIFT + 300*shift + "px";
+    canvas.style.top = 100*(N+1) + Y_SHIFT + 300*shift + "px";
     canvas.width = width;
     var height = canvas.height;
     var ctx = canvas.getContext('2d');
@@ -382,7 +382,7 @@
 
     canvas.style.position = "absolute";
     canvas.style.left = 100 + pos*width + X_SHIFT + "px";
-    canvas.style.top = 100*(N+2) + 200 + Y_SHIFT + 300*shift + "px";
+    canvas.style.top = 100*(N+1) + 200 + Y_SHIFT + 300*shift + "px";
     var ctx = canvas.getContext('2d');
     ctx.font = '64px serif';
     ctx.fillStyle = '#404040';
@@ -426,7 +426,7 @@
         make_result(state_all[i][0], i, state_all[i][1], measure_indices_length, j);
       }
       delete_button("sort-show"+j);
-      make_button("sort_show", 20, 100*(N+4)+300*j+10, "sort-show"+j, "SORT");
+      make_button("sort_show", 20, 100*(N+3)+300*j+10, "sort-show"+j, "SORT");
       document.getElementById("sort-show"+j).addEventListener('click', () => {
         sort_show_flag = !sort_show_flag;
         delete_results();
